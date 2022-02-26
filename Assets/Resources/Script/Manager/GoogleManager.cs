@@ -43,7 +43,7 @@ public class GoogleManager : MonoBehaviour
 
     private void Update()
     {
-        if(logOneShot <= 0)
+        if (logOneShot <= 0)
         {
             logAnim.SetBool("SetLog", false);
             logOneShot++;
@@ -75,7 +75,7 @@ public class GoogleManager : MonoBehaviour
                 }
             });
         }
-        
+
     }
 
     public void OpenLogOutWindow()
