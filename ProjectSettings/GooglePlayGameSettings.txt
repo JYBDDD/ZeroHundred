@@ -1,0 +1,9 @@
+lastUpgrade=01014
+proj.pluginVersion=0.10.14
+proj.AppId=116079147617
+and.BundleId=com.DefaultCompany.ZeroHundred
+proj.classDir=Assets
+proj.ConstantsClassName=GPGSIds
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--Google+Play+game+services+IDs.+Save+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--app_id--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e116079147617%3c%2fstring%3e%0d%0a++%3c%21--package_name--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.DefaultCompany.ZeroHundred%3c%2fstring%3e%0d%0a++%3c%21--achievement+Game+Login%21%21--%3e%0d%0a++%3cstring+name%3d%22achievement_game_login%22+translatable%3d%22false%22%3eCgkI4fTstrADEAIQAQ%3c%2fstring%3e%0d%0a%3c%2fresources%3e
+and.ClientId=116079147617-sgpivnshps40hlm1loh770cfgmn0urt5.apps.googleusercontent.com
+android.SetupDone=true
