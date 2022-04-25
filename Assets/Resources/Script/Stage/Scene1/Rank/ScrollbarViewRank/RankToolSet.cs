@@ -11,7 +11,7 @@ public class RankToolSet : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             // Prefabs 랭크창 클론
-            GameObject clone = GameManager.Resource.Instantiate("UI/Rank/1Rank", transform.position, Quaternion.identity,transform);
+            GameObject clone = GameManager.Resource.Instantiate("UI/Rank/1Rank", transform.position, new Quaternion(0,0,0,0),transform);
 
             // 순위
             Text text = clone.transform.GetChild(0).GetComponent<Text>();
