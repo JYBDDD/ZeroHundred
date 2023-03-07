@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMissileC : WeaponBase
+public class PlayerMissileC : MissileBase
 {
     Vector3 lookVec = Vector3.zero;
 
@@ -68,21 +68,13 @@ public class PlayerMissileC : WeaponBase
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Enemy"))
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Missile/MissileHit", transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+        base.OnTriggerEnter(other);
+    }
 
-            GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerMissile/PlayerMissileHit");
-            other.gameObject.GetComponent<BaseController>().Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 2);     // Missile 데미지 처리
-            other.gameObject.GetComponent<BaseController>().animBool = true;
-        }
-        if (other.gameObject.CompareTag("EnemyWeaponD"))        // 파괴가능한 오브젝트에 맞을시 삭제
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Missile/MissileHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
-        }
+    protected override void DamageProcess(Collider other)
+    {
+        PlayerMissileProcess(other);   
     }
 }

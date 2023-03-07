@@ -8,11 +8,9 @@ public class Enemy1_2Controller : BaseController
     float lookVec = 0.0f;
     Quaternion lookQut = Quaternion.identity;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        Invoke("Enemy1ReturnState", 0);            // 피격후 색상 미변경 방지
-
-        animation = GetComponent<Animation>();
+        base.OnEnable();
         _gtime = 0;
 
         //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Enemy1_2Stat");      // 스탯 불러오기  (PC 전용)
@@ -52,9 +50,8 @@ public class Enemy1_2Controller : BaseController
     private void FixedUpdate()
     {
         DestroyObject();
-        ObjectDead();
         MoveDirect();
-        StateHit("SwitchColor1", "Enemy1ReturnState");
+        StateHit("SwitchColor1");
     }
 
     private void MoveDirect()

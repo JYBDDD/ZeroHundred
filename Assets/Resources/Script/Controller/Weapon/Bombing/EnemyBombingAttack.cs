@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBombingAttack : MonoBehaviour
+public class EnemyBombingAttack : WeaponBase
 {
     public static bool BombingHitShake = false;
 
@@ -25,7 +25,12 @@ public class EnemyBombingAttack : MonoBehaviour
             isbool = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void DamageProcess(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && isbool)
         {
@@ -34,6 +39,5 @@ public class EnemyBombingAttack : MonoBehaviour
 
             BombingHitShake = true;
         }
-
     }
 }

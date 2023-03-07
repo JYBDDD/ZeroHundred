@@ -23,19 +23,16 @@ public class EnemyBombingOn : MonoBehaviour
 
     IEnumerator BombingAttack()
     {
-        yield return null;
+        yield return new WaitForSeconds(1f);
+        spriteRenderer.enabled = false;
 
-        bool isbool = true;
-        if(isbool)
-        {
-            yield return new WaitForSeconds(1f);
-            spriteRenderer.enabled = false;
-            yield return new WaitForSeconds(0.1f);
-            GameManager.Resource.Instantiate("Weapon/Bombing/BombingEffect",transform.position,Quaternion.identity,GameManager.EnemyBulletParent.transform);
-            isbool = false;
-            yield return new WaitForSeconds(0.1f);
-            spriteRenderer.enabled = true;
-            GameManager.Pool.Push(gameObject);
-        }
+        yield return new WaitForSeconds(0.1f);
+        GameManager.Resource.Instantiate("Weapon/Bombing/BombingEffect", transform.position, Quaternion.identity, GameManager.EnemyBulletParent.transform);
+
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.enabled = true;
+        GameManager.Pool.Push(gameObject);
+
+        yield break;
     }
 }

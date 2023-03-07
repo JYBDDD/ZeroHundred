@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Fixed : MonoBehaviour
 {
-    private void Awake()
-    {
-        Application.targetFrameRate = 60;           // 프레임 60으로 고정
-    }
-
     private void Start()
     {
         SetResolution();

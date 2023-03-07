@@ -14,30 +14,17 @@ public class Boss1Controller : BaseController
     // StartMove 사용중
     float startTime = 0;
     int startCount = 0;
-    bool startEndBool = false;      // 이동 종료시 true (StartMove)
 
     // BossPattern
     float time;         // 패턴 변경 타임
     bool fanShotSoundBool = false;
 
-    // BossDead 설정
-    bool bossUpdateBool = false;
-    bool bossDeadBool = false;      // true 일시 오브젝트 삭제
-    float bossDeadEffectTime = 0f;
-    float bossDeadTime = 0f;
-
     // FlashBang 설정
     public static bool FlashBangBool = false;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        animation = GetComponent<Animation>();
-
-        bossDeadEffectTime = 0;
-        bossDeadTime = 0;
-        bossDeadBool = false;
-        bossUpdateBool = false;
-        startEndBool = false;
+        base.OnEnable();
 
         //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Boss1Stat");      // 스탯 불러오기   (PC 전용)
         stat = GameManager.Json.AndroidLoadJson<Stat>("Data/Boss1Stat");       // 스탯 (Android 용)
@@ -62,9 +49,7 @@ public class Boss1Controller : BaseController
             GameManager.Pool.Push(gameObject);
 
         StartMove();
-        BossDead();
-        BossPattern();
-        StateHit("BossSwitchColor1", "Boss1ReturnState");
+        StateHit("BossSwitchColor1");
 
         if(FlashBangBool == false && stat.Hp == 800 | stat.Hp == 500 | stat.Hp == 300)        // 체력이 일정량 접근시
         {
@@ -72,15 +57,6 @@ public class Boss1Controller : BaseController
             GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB",transform.position,Quaternion.identity,GameManager.EnemyBulletParent.transform);
             FlashBangBool = true;
         }
-
-        if (stat.Hp == 0 && bossUpdateBool == false)     // 보스의 체력이 0일때 BossPattern을 실행하지 않도록 설정
-        {
-            GameManager.Sound.Play("Art/Sound/BGM/GameScene_BGM");      // 보스 처치후 다시 게임씬_BGM 로드
-            bossUpdateBool = true;
-            machineGun.SetActive(false);
-            missileLauncher.SetActive(false);
-        }
-
     }
 
     private void StartMove()
@@ -115,14 +91,14 @@ public class Boss1Controller : BaseController
         {
             startCount++;
             gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0));
-            startEndBool = true;
+            StartCoroutine(BossPatternCor());
         }
         #endregion
     }
 
-    private void BossPattern()
+    IEnumerator BossPatternCor()
     {
-        if(startEndBool && bossUpdateBool == false)
+        while (true)
         {
             time += Time.deltaTime;
 
@@ -148,9 +124,18 @@ public class Boss1Controller : BaseController
                         break;
                 }
             }
-
         }
+    }
 
+    /// <summary>
+    /// 보스 패턴 종료
+    /// </summary>
+    public void BossPartternStop()
+    {
+        StopCoroutine(BossPatternCor());
+        GameManager.Sound.Play("Art/Sound/BGM/GameScene_BGM");      // 보스 처치후 다시 게임씬_BGM 로드
+        machineGun.SetActive(false);
+        missileLauncher.SetActive(false);
     }
 
     private void MachineGunFiring()     // 플레이어 조준 사격
@@ -235,27 +220,36 @@ public class Boss1Controller : BaseController
     }
 
 
-    private void BossDead()
+    public void BossDead()
     {
-        if(stat.Hp <= 0 && bossDeadBool == false)
-        {
-            bossDeadEffectTime += Time.deltaTime;
-            bossDeadTime += Time.deltaTime;
+        StartCoroutine(BossDeadCor());
 
+        IEnumerator BossDeadCor()
+        {
+            float time = 0;
+            float deadEffectCall = 0;
             Vector2 dirvec = new Vector2(Random.Range(-2f, 2f), Random.Range(1.5f, 3f));        // DeadEffect 랜덤 위치값
 
-            if(bossDeadEffectTime > 0.25f)
+            while (true)
             {
-                GameManager.Resource.Instantiate("Boss/BossDeadEffect", dirvec, Quaternion.identity, GameManager.DeadEffectParent.transform);       // 0.25초마다 호출되도록 설정
-                bossDeadEffectTime = 0;
-            }
+                time += Time.deltaTime;
+                deadEffectCall += Time.deltaTime;
 
-            if (bossDeadTime > 3f)
-            {
-                bossDeadBool = true;
-                GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/BossDie");
-                GameManager.Resource.Instantiate("Boss/Boss1FinalDeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
-                GameManager.Pool.Push(gameObject);
+                if(deadEffectCall > 0.25f)
+                {
+                    GameManager.Resource.Instantiate("Boss/BossDeadEffect", dirvec, Quaternion.identity, GameManager.DeadEffectParent.transform);       // 0.25초마다 호출되도록 설정
+                    deadEffectCall = 0;
+                }
+
+                if(time > 3f)
+                {
+                    GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/BossDie");
+                    GameManager.Resource.Instantiate("Boss/Boss1FinalDeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
+                    GameManager.Pool.Push(gameObject);
+                    yield break;
+                }
+
+                yield return null;
             }
         }
     }

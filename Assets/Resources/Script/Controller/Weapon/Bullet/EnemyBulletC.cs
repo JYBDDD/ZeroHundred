@@ -36,7 +36,12 @@ public class EnemyBulletC : WeaponBase
         timeBool = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void DamageProcess(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {

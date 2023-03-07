@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Enemy2Controller : BaseController
 {
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        Invoke("Enemy2ReturnState", 0);            // 피격후 색상 미변경 방지
-
-        animation = GetComponent<Animation>();
+        base.OnEnable();
 
         //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Enemy2Stat");    // 스탯 불러오기  (PC 전용)
         stat = GameManager.Json.AndroidLoadJson<Stat>("Data/Enemy2Stat");       // 스탯
@@ -29,7 +27,6 @@ public class Enemy2Controller : BaseController
     private void FixedUpdate()
     {
         DestroyObject();
-        ObjectDead();
-        StateHit("SwitchColor2", "Enemy2ReturnState");
+        StateHit("SwitchColor2");
     }
 }

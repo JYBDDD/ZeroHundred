@@ -2,18 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossMissileC : WeaponBase
+public class BossMissileC : MissileBase
 {
     private float speed = 0.0f;             // 유도미사일에 Movement2D 사용하지 않고 자체적으로 구현함
     Vector3 lookVec = Vector3.zero;
     private float waitTime = 0.0f;
-
-    AudioClip[] audioClips;         // 미사일 폭발 사운드 3개를 랜덤값으로 설정하여 무작위 발생
-
-    private void Awake()
-    {
-        audioClips = Resources.LoadAll<AudioClip>("Art/Sound/Effect/Enemy/EnemyMissile/EnemyMissileHit");
-    }
 
     private void OnEnable()
     {
@@ -56,25 +49,13 @@ public class BossMissileC : WeaponBase
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (other.transform.CompareTag("Player"))
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Missile/EnemyMissileHit", gameObject.transform.position, Quaternion.Euler(-90, 0, 0), GameManager.MuzzleOfHitParent.transform);
+        base.OnTriggerEnter(other);
+    }
 
-            EnemyMissileC.MissileHitShake = true;
-
-            GameManager.Sound.Play(audioClips[Random.Range(0, 3)]);
-            other.GetComponent<PlayerControllerEx>().Stat.AttackDamage(other.GetComponent<PlayerControllerEx>().Stat, 4);       // BossMissile 데미지 처리
-        }
-        if (other.transform.CompareTag("PlayerProjectile") | other.transform.CompareTag("Missile"))      // 유도미사일은 플레이어가 발사하는 Projectile이 삭제되지 않고 계속 유지됨
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Missile/EnemyMissileHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
-
-            if(Random.Range(0,3) >= 2)      // 소리가 너무 겹치지 않도록 랜덤으로 소리생성이 되지 않도록 설정
-                GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyMissile/EnemyMissileExplosion");
-        }
+    protected override void DamageProcess(Collider other)
+    {
+        EnemyMissileProcess(other);
     }
 }

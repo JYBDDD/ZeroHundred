@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -11,7 +12,17 @@ public class BaseController : MonoBehaviour
     protected Stat stat = new Stat();
     public Stat Stat { get => stat; }
 
+    private Define.ObjType _objType = Define.ObjType.None;
+    public Define.ObjType ObjType { get => _objType; }
+
     public static List<GameObject> ObjectList = new List<GameObject>();
+
+    protected virtual void OnEnable()
+    {
+        animation = GetComponent<Animation>();
+        _objType = EnemyReturnState();
+    }
+
 
     /// <summary>
     /// 초기 스탯 설정
@@ -46,45 +57,59 @@ public class BaseController : MonoBehaviour
     }
 
     /// <summary>
-    /// 오브젝트의 체력이 0이 되었을때 폭발 이펙트후 삭제(Update용)
+    /// 폭발 이펙트후 삭제(Update용) - Enemy만 해당
     /// </summary>
-    protected void ObjectDead()
+    public void EnemyDead()
     {
-        if (stat.hp <= 0)
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyDie/EnemyDie");
-            GameManager.SCORE += stat.DropScore;        // 점수 획득
-            GameManager.Resource.ItemInstantiate(transform.position, Quaternion.identity, GameManager.ItemObjectParent.transform);  // 내부에서 10% 확률로 랜덤 아이템 생성
-        }
+        GameManager.Pool.Push(gameObject);
+        GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
+        GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyDie/EnemyDie");
+        GameManager.SCORE += stat.DropScore;        // 점수 획득
+        GameManager.Resource.ItemInstantiate(transform.position, Quaternion.identity, GameManager.ItemObjectParent.transform);  // 내부에서 10% 확률로 랜덤 아이템 생성
     }
 
     #region 적 타격시 일시적 색상 변경
-    protected void StateHit(string animationName,string returnMethodName)
+    protected void StateHit(string animationName)
     {
         if (animBool == true)
         {
-            animation.Play(animationName);
+            // 피격 애니메이션과 혼합
+            animation.Blend(animationName,10,0.03f);
+
             animBool = false;
-            Invoke(returnMethodName, 0.1f);
+            Invoke("EnemyReturnState", 0.5f);
         }
-
     }
 
-    protected void Enemy1ReturnState()
+    protected Define.ObjType EnemyReturnState()
     {
-        animation.Play("Enemy1");
-    }
+        string objN = this.name;
 
-    protected void Enemy2ReturnState()
-    {
-        animation.Play("Enemy2");
-    }
+        if (objN.Contains("Player"))
+            return Define.ObjType.Player;
+        else if (objN.Contains("Enemy"))
+        {
+            // 적 필요 인덱스 반환
+            int idx = objN.IndexOf("Enemy") + 5;
 
-    protected void Boss1ReturnState()
-    {
-        animation.Play("Boss1");
+            if(int.TryParse(objN[idx].ToString(), out int num))
+            {
+                if (num >= 2)
+                    animation.Play("Enemy2");
+                else
+                    animation.Play("Enemy1");
+            }
+            animation.Rewind();
+            return Define.ObjType.Enemy;
+        }
+        else if(objN.Contains("Boss"))
+        {
+            animation.Play("Boss1");
+            return Define.ObjType.Boss;
+        }
+        else
+            return Define.ObjType.None;
+
     }
     #endregion
 

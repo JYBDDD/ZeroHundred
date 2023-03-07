@@ -23,9 +23,6 @@ public class PlayerControllerEx : BaseController
 
     public Animator _anim;
 
-    // 사운드용 변수
-    bool deadBool;
-
     #region        스킬 실행시 사용되는 것
     [SerializeField]
     private GameObject[] gameObjects;           // 플레이어 무기 저장
@@ -35,15 +32,15 @@ public class PlayerControllerEx : BaseController
 
     private void Awake()
     {
-        _anim = GetComponent<Animator>();
         //StatSet(true);        // 스탯 생성
         //stat = GameManager.Json.LoadJsonFile<Stat>(Resources.Load<TextAsset>("/Data/PlayerStat").text, "PlayerStat");      // 스탯 (PC용)
         stat = GameManager.Json.AndroidLoadJson<Stat>("Data/PlayerStat");       // 스탯 (Android 용)
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        deadBool = false;
+        _anim = GetComponent<Animator>();
+        base.OnEnable();
     }
 
     public void Movement(Vector2 inputDirection)
@@ -82,15 +79,6 @@ public class PlayerControllerEx : BaseController
 
     private void LateUpdate()  
     {
-        if(Stat.Hp <= 0 && deadBool == false)            // 플레이어의 체력이 0이 되었을시
-        {
-            GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerDie");
-            // 폭발 이펙트
-            GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
-            gameObject.SetActive(false);
-            deadBool = true;
-        }
-
         AnimTumbleSet();
     }
 
@@ -124,5 +112,16 @@ public class PlayerControllerEx : BaseController
                 gameObjects[i].SetActive(true);
             }
         }
+    }
+
+    /// <summary>
+    /// 플레이어 사망
+    /// </summary>
+    public void PlayerDead()
+    {
+        GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerDie");
+        // 폭발 이펙트
+        GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
+        gameObject.SetActive(false);
     }
 }

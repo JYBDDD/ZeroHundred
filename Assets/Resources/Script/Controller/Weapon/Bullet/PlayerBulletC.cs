@@ -16,12 +16,17 @@ public class PlayerBulletC : WeaponBase
         timeBool = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void DamageProcess(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Bullet/BulletHit", gameObject.transform.position,Quaternion.identity,GameManager.MuzzleOfHitParent.transform);
+            GameManager.Resource.Instantiate("Weapon/Bullet/BulletHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
 
             GameManager.Player.playerController.Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 1);     // Projectile 데미지 처리
             GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileHit");

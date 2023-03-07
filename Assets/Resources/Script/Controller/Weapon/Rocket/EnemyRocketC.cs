@@ -31,7 +31,12 @@ public class EnemyRocketC : WeaponBase
         timeBool = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void DamageProcess(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
@@ -44,13 +49,12 @@ public class EnemyRocketC : WeaponBase
             GameManager.Player.playerController.Stat.AttackDamage(other.gameObject.GetComponent<PlayerControllerEx>().Stat, 10);        // 로켓 데미지 처리
         }
 
-        if (other.gameObject.CompareTag("PlayerProjectile") | other.gameObject.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
+        if (other.gameObject.CompareTag("PlayerProjectile") || other.gameObject.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
         {
             GameManager.Pool.Push(gameObject);
             GameManager.Resource.Instantiate("Weapon/Rocket/RocketExplosion", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
             GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyRoket/EnemyRoketExplosion");
         }
-
     }
 
     private void Update()
