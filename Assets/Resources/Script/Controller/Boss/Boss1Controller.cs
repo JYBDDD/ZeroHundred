@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss1Controller : BaseController
+public class Boss1Controller : EnemyBase
 {
     [SerializeField]
     private GameObject machineGun;

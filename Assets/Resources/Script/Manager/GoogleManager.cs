@@ -52,20 +52,22 @@ public class GoogleManager : MonoBehaviour
 
     public void Login()
     {
-        if (Social.localUser.authenticated == true)     // 이미 가입이 된 상태 라면
+        // 이미 가입이 된 상태 라면
+        if (Social.localUser.authenticated == true)     
         {
             BackendReturnObject BRO = Backend.BMember.AuthorizeFederation(GetTokens(), FederationType.Google);
 
-            SceneManager.LoadScene("Scene 1");      // 씬 이동
+            // 씬 이동
+            SceneManager.LoadScene("Scene 1");      
             GameManager.Sound.Play("Art/Sound/Effect/UI/UISuccess");
 
         }
-        else           // 첫 가입 일시
+        // 첫 가입 일시
+        else
         {
             Social.localUser.Authenticate((bool success) =>
             {
                 // success 가 true 라면 회원 가입
-
                 if (!success)
                 {
                     LogText.text = "Google Login Fail";

@@ -32,9 +32,11 @@ public class BackendMain
         }
     }
 
-    public void CustomSignUp(string id,string password,string nickName)      // 회원 가입
+    // 회원 가입
+    public void CustomSignUp(string id,string password,string nickName)      
     {
-        if(nickName.TrimStart() != "" && NicknameRestrictions(nickName))     // 닉네임에 공백만 작성시 회원가입 실패, 닉네임 11글자 초과시 실패
+        // 닉네임에 공백만 작성시 회원가입 실패, 닉네임 11글자 초과시 실패
+        if (nickName.TrimStart() != "" && NicknameRestrictions(nickName))     
         {
             var bro = Backend.BMember.CustomSignUp(id, password);
 
@@ -44,11 +46,13 @@ public class BackendMain
                 LoginSceneButton.GUICreateSuccessBool = true;
                 GameManager.Sound.Play("Art/Sound/Effect/UI/UISuccess");
 
-                Param param = new Param();                  // 아이디 생성시 사용할 값 미리 적용 (오류 방지)
+                // 아이디 생성시 사용할 값 미리 적용 (오류 방지)
+                Param param = new Param();                  
                 param.Add("UserName", GetNick());
                 param.Add("Score", GameManager.SCORE);
 
-                Backend.GameData.Insert("UserInfo", param);                                  // 새로운값 Insert
+                // 새로운값 Insert
+                Backend.GameData.Insert("UserInfo", param);                                  
             }
             else
             {
