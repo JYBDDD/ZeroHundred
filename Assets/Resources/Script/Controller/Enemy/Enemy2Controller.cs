@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Enemy2Controller : BaseController
+public class Enemy2Controller : EnemyBase
 {
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Enemy2Stat");    // ½ºÅÈ ºÒ·¯¿À±â  (PC Àü¿ë)
-        stat = GameManager.Json.AndroidLoadJson<Stat>("Data/Enemy2Stat");       // ½ºÅÈ
+        SpreadData();
 
         ObjectList.Add(gameObject);
     }
@@ -19,14 +15,8 @@ public class Enemy2Controller : BaseController
         ObjectList.Remove(gameObject);
     }
 
-    private void Start()
-    {
-        //StatSet(true);        // ½ºÅÈ »ý¼º
-    }
-
     private void FixedUpdate()
     {
         DestroyObject();
-        StateHit("SwitchColor2");
     }
 }

@@ -26,8 +26,7 @@ public class Boss1Controller : BaseController
     {
         base.OnEnable();
 
-        //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Boss1Stat");      // 스탯 불러오기   (PC 전용)
-        stat = GameManager.Json.AndroidLoadJson<Stat>("Data/Boss1Stat");       // 스탯 (Android 용)
+        SpreadData();
 
 
         time = 10;
@@ -49,7 +48,6 @@ public class Boss1Controller : BaseController
             GameManager.Pool.Push(gameObject);
 
         StartMove();
-        StateHit("BossSwitchColor1");
 
         if(FlashBangBool == false && stat.Hp == 800 | stat.Hp == 500 | stat.Hp == 300)        // 체력이 일정량 접근시
         {
@@ -124,6 +122,8 @@ public class Boss1Controller : BaseController
                         break;
                 }
             }
+
+            yield return null;
         }
     }
 

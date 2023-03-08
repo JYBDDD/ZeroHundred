@@ -43,13 +43,16 @@ public class MissileBase : WeaponBase
             GameManager.Resource.Instantiate("Weapon/Missile/MissileHit", transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
 
             GameManager.Sound.Play(playerClip);
-            other.gameObject.GetComponent<BaseController>().Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 2);     // Missile 데미지 처리
-            other.gameObject.GetComponent<BaseController>().animBool = true;
+            checkBase = other.gameObject.GetComponent<BaseController>();
+
+            checkBase.Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 2);     // Missile 데미지 처리
+            checkBase.animBool = true;
+            checkBase.StateHit_Enemy(other.gameObject.name);
         }
         if (other.gameObject.CompareTag("EnemyWeaponD"))        // 파괴가능한 오브젝트에 맞을시 삭제
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Missile/MissileHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+            GameManager.Resource.Instantiate("Weapon/Missile/MissileHit", transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
         }
 
     }

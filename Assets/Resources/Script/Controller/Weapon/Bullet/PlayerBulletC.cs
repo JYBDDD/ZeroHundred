@@ -30,7 +30,10 @@ public class PlayerBulletC : WeaponBase
 
             GameManager.Player.playerController.Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 1);     // Projectile 데미지 처리
             GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileHit");
-            other.gameObject.GetComponent<BaseController>().animBool = true;
+
+            checkBase = other.gameObject.GetComponent<BaseController>();
+            checkBase.animBool = true;
+            checkBase.StateHit_Enemy(other.gameObject.name);
         }
 
         if (other.gameObject.CompareTag("EnemyWeaponD"))            // 파괴가능한 오브젝트에 맞을시 삭제

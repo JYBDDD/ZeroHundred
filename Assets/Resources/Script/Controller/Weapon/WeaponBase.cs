@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
 {
+    protected BaseController checkBase;
+
     protected virtual void OnTriggerEnter(Collider other)
     {
         var thisComponent = other.GetComponent<BaseController>();

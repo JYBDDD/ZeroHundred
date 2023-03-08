@@ -30,11 +30,9 @@ public class PlayerControllerEx : BaseController
     private float TumbleTime = 0;               // 3초후 임시 사격정지 해제
     #endregion
 
-    private void Awake()
+    protected override void Awake()
     {
-        //StatSet(true);        // 스탯 생성
-        //stat = GameManager.Json.LoadJsonFile<Stat>(Resources.Load<TextAsset>("/Data/PlayerStat").text, "PlayerStat");      // 스탯 (PC용)
-        stat = GameManager.Json.AndroidLoadJson<Stat>("Data/PlayerStat");       // 스탯 (Android 용)
+        SpreadData();
     }
 
     protected override void OnEnable()

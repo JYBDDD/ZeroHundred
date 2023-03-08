@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -6,9 +5,10 @@ using UnityEngine;
 public class BaseController : MonoBehaviour
 {
     // 공통 데이터 -> Enemy,Player
-    protected new Animation animation;      // 자식의 Start나 OnEnable 에서 GetComponent 호출해줘야함
+    protected new Animation animation;
     public bool animBool = false;
 
+    protected string id = string.Empty;
     protected Stat stat = new Stat();
     public Stat Stat { get => stat; }
 
@@ -17,12 +17,29 @@ public class BaseController : MonoBehaviour
 
     public static List<GameObject> ObjectList = new List<GameObject>();
 
+    protected virtual void Awake() {}
+
     protected virtual void OnEnable()
     {
         animation = GetComponent<Animation>();
         _objType = EnemyReturnState();
     }
 
+    /// <summary>
+    /// 데이터 삽입
+    /// </summary>
+    protected void SpreadData()
+    {
+        if (id == string.Empty)
+        {
+            if (this.name.Contains("Clone"))
+                id = this.name.Split('(')[0];
+            else
+                id = this.name.Split('/')[1];
+        }
+
+        stat = GameManager.Json.AndroidLoadJson<Stat>($"Data/{id}Stat");       // 스탯
+    }
 
     /// <summary>
     /// 초기 스탯 설정
@@ -57,7 +74,7 @@ public class BaseController : MonoBehaviour
     }
 
     /// <summary>
-    /// 폭발 이펙트후 삭제(Update용) - Enemy만 해당
+    /// 적 사망
     /// </summary>
     public void EnemyDead()
     {
@@ -69,12 +86,24 @@ public class BaseController : MonoBehaviour
     }
 
     #region 적 타격시 일시적 색상 변경
-    protected void StateHit(string animationName)
+    public void StateHit_Enemy(string objName)
     {
         if (animBool == true)
         {
+            StringBuilder sb = new StringBuilder();
+            if (objName.Contains("Boss"))
+                sb.Append("BossSwitchColor1");
+            else
+            {
+                int num = 2;
+                if (objName.Contains("1_"))
+                    num = 1;
+                sb.Append("SwitchColor" + num);
+            }
+
+
             // 피격 애니메이션과 혼합
-            animation.Blend(animationName,10,0.03f);
+            animation.Blend(sb.ToString(), 10, 0.03f);
 
             animBool = false;
             Invoke("EnemyReturnState", 0.5f);
@@ -112,5 +141,4 @@ public class BaseController : MonoBehaviour
 
     }
     #endregion
-
 }

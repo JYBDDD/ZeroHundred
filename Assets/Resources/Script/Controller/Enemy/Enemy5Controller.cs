@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy5Controller : BaseController
+public class Enemy5Controller : EnemyBase
 {
     [SerializeField]
     private StageData stageData;
@@ -11,8 +10,7 @@ public class Enemy5Controller : BaseController
     {
         base.OnEnable();
 
-        //stat = GameManager.Json.LoadJsonFile<Stat>(Application.dataPath + $"/Data", "Enemy5Stat");    // ½ºÅÈ ºÒ·¯¿À±â  (PC Àü¿ë)
-        stat = GameManager.Json.AndroidLoadJson<Stat>("Data/Enemy5Stat");       // ½ºÅÈ
+        SpreadData();
 
         ObjectList.Add(gameObject);
         StartCoroutine(BombWarning());
@@ -26,15 +24,9 @@ public class Enemy5Controller : BaseController
         StopCoroutine(BombWarning());
     }
 
-    private void Start()
-    {
-        //StatSet(true);        // ½ºÅÈ »ý¼º
-    }
-
     private void FixedUpdate()
     {
         DestroyObject();
-        StateHit("SwitchColor2");
     }
 
     IEnumerator BombWarning()
