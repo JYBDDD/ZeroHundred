@@ -37,11 +37,6 @@ public class Boss1Controller : BaseController
         BossStatStatic = stat;
     }
 
-    private void Start()
-    {
-        //StatSet(true);        // 스탯 생성
-    }
-
     private void Update()
     {
         if(GameManager.Player.playerController.Stat.Hp <= 0)        // 플레이어 사망시 삭제
@@ -49,7 +44,7 @@ public class Boss1Controller : BaseController
 
         StartMove();
 
-        if(FlashBangBool == false && stat.Hp == 800 | stat.Hp == 500 | stat.Hp == 300)        // 체력이 일정량 접근시
+        if(FlashBangBool == false && stat.Hp == 800 || stat.Hp == 500 || stat.Hp == 300)        // 체력이 일정량 접근시
         {
             GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/FlashBang");
             GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB",transform.position,Quaternion.identity,GameManager.EnemyBulletParent.transform);

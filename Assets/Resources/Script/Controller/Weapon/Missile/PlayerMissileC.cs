@@ -6,6 +6,8 @@ public class PlayerMissileC : MissileBase
 {
     Vector3 lookVec = Vector3.zero;
 
+    const string playerMisslieShotPath = "Art/Sound/Effect/Player/PlayerMissile/PlayerMissileShot";
+
     private void OnEnable()
     {
         StartCoroutine(StartMissile());
@@ -49,20 +51,21 @@ public class PlayerMissileC : MissileBase
         bool isbool = true;
         if(isbool)
         {
-            GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerMissile/PlayerMissileShot");
+            GameManager.Sound.Play(playerMisslieShotPath);
+            Movement2D m2D = gameObject.GetComponent<Movement2D>();
 
             if (BaseController.ObjectList.Count == 0)       // 적이 없을 시 전방을 향해 발사
             {
-                gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 10f, 0));
+                m2D.MoveDirection(new Vector3(0, 10f, 0));
                 transform.rotation = Quaternion.Euler(-90, 0, 0);
             }
 
             for (int i = 0; i < BaseController.ObjectList.Count; i++)
             {
                 int randNum = Random.Range(0, BaseController.ObjectList.Count);     // 랜덤으로 적을 향해 발사
-                lookVec = (BaseController.ObjectList[randNum].transform.position - gameObject.transform.position).normalized;       // 적 위치 값
+                lookVec = (BaseController.ObjectList[randNum].transform.position - transform.position).normalized;       // 적 위치 값
 
-                gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(lookVec.x * 10f, lookVec.y * 10f));         // 이동 방향 결정
+                m2D.MoveDirection(new Vector3(lookVec.x * 10f, lookVec.y * 10f));         // 이동 방향 결정
             }
 
         }

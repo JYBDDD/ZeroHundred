@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBulletC : WeaponBase
@@ -12,12 +10,19 @@ public class EnemyBulletC : WeaponBase
     private bool timeBool = false;
 
     Rigidbody rigid;        // Boss1Controller 에서 사용하는 패턴 AddForce 초기화 용
-
-    AudioClip[] audioClips;         // Projectile 타격 사운드 4개를 랜덤값으로 설정하여 무작위 발생
+    AudioClip[] audioClips; // Projectile 타격 사운드 4개를 랜덤값으로 설정하여 무작위 발생
+    const string projectileHitPath = "Art/Sound/Effect/Enemy/EnemyProjectile/EnemyProjectileHit";
 
     private void Awake()
     {
-        audioClips = Resources.LoadAll<AudioClip>("Art/Sound/Effect/Enemy/EnemyProjectile/EnemyProjectileHit");
+        Initialize();
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        audioClips = Resources.LoadAll<AudioClip>(projectileHitPath);
+        AddHitAction(() => { GameManager.Resource.Instantiate("Weapon/Bullet/PlayerHit", transform.position, Quaternion.identity, muzzleHitT); });
     }
 
     private void Start()
@@ -46,18 +51,19 @@ public class EnemyBulletC : WeaponBase
         if (other.gameObject.CompareTag("Player"))
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Bullet/PlayerHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+            HitActionInvoke();
 
             bulletHitShake = true;
 
-            GameManager.Sound.Play(audioClips[Random.Range(0, 4)]);
-            other.GetComponent<PlayerControllerEx>().Stat.AttackDamage(other.GetComponent<PlayerControllerEx>().Stat, 1);       // EnemyProjectile 데미지 처리
+            GameManager.Sound.Play(audioClips[UnityEngine.Random.Range(0, 4)]);
+            PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
+            pEx.Stat.AttackDamage(pEx.Stat, 1);       // EnemyProjectile 데미지 처리
         }
 
         if (other.gameObject.CompareTag("PlayerGuard"))     // 플레이어 스킬에 막히도록 설정
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Bullet/PlayerHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+            HitActionInvoke();
         }
     }
 
@@ -72,7 +78,6 @@ public class EnemyBulletC : WeaponBase
             trailRenderer.emitting = true;
             timeBool = true;
         }
-
     }
     
 }

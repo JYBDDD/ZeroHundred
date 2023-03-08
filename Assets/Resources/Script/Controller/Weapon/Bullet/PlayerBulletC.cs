@@ -9,6 +9,19 @@ public class PlayerBulletC : WeaponBase
     private float time = 0;
     private bool timeBool = false;
 
+    const string projectileHitPath = "Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileHit";
+
+    private void Awake()
+    {
+        Initialize();
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        AddHitAction(() => { GameManager.Resource.Instantiate(bulletHitPath, transform.position, Quaternion.identity, muzzleHitT); });
+    }
+
     private void OnDisable()
     {
         trailRenderer.emitting = false;
@@ -26,12 +39,12 @@ public class PlayerBulletC : WeaponBase
         if (other.gameObject.CompareTag("Enemy"))
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Bullet/BulletHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
-
-            GameManager.Player.playerController.Stat.AttackDamage(other.gameObject.GetComponent<BaseController>().Stat, 1);     // Projectile 데미지 처리
-            GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileHit");
+            HitActionInvoke();
 
             checkBase = other.gameObject.GetComponent<BaseController>();
+            GameManager.Player.playerController.Stat.AttackDamage(checkBase.Stat, 1);     // Projectile 데미지 처리
+            GameManager.Sound.Play(projectileHitPath);
+
             checkBase.animBool = true;
             checkBase.StateHit_Enemy(other.gameObject.name);
         }
@@ -39,7 +52,7 @@ public class PlayerBulletC : WeaponBase
         if (other.gameObject.CompareTag("EnemyWeaponD"))            // 파괴가능한 오브젝트에 맞을시 삭제
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Bullet/BulletHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+            HitActionInvoke();
         }
     }
 

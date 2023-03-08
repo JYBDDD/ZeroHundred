@@ -12,6 +12,19 @@ public class EnemyRocketC : WeaponBase
     private bool timeBool = false;
 
     Rigidbody rigid;        // Boss1Controller 에서 사용하는 패턴 AddForce 초기화 용
+    const string roketHitPath = "Weapon/Rocket/RocketExplosion";
+    const string roketHitSoundPath = "Art/Sound/Effect/Enemy/EnemyRoket/EnemyRoketExplosion";
+
+    private void Awake()
+    {
+        Initialize();
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+    }
+
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -38,22 +51,23 @@ public class EnemyRocketC : WeaponBase
 
     protected override void DamageProcess(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        GameObject obj = other.gameObject;
+        if (obj.CompareTag("Player"))
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Rocket/RocketExplosion", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
+            GameManager.Resource.Instantiate(roketHitPath, transform.position, Quaternion.identity, muzzleHitT);
 
             RocketHitShake = true;
 
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyRoket/EnemyRoketExplosion");
-            GameManager.Player.playerController.Stat.AttackDamage(other.gameObject.GetComponent<PlayerControllerEx>().Stat, 10);        // 로켓 데미지 처리
+            GameManager.Sound.Play(roketHitSoundPath);
+            GameManager.Player.playerController.Stat.AttackDamage(obj.GetComponent<PlayerControllerEx>().Stat, 10);        // 로켓 데미지 처리
         }
 
-        if (other.gameObject.CompareTag("PlayerProjectile") || other.gameObject.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
+        if (obj.CompareTag("PlayerProjectile") || obj.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
         {
             GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate("Weapon/Rocket/RocketExplosion", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyRoket/EnemyRoketExplosion");
+            GameManager.Resource.Instantiate(roketHitPath, transform.position, Quaternion.identity, muzzleHitT);
+            GameManager.Sound.Play(roketHitSoundPath);
         }
     }
 

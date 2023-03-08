@@ -55,7 +55,6 @@ public class BaseController : MonoBehaviour
 
             string jsonData = GameManager.Json.ObjectToJson(stat);
             GameManager.Json.CreateJsonFile(Application.dataPath, "Boss1Stat", jsonData);
-            Debug.Log("½ºÅÈ »ý¼º");
         }
     }
 

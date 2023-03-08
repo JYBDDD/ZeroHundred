@@ -1,8 +1,31 @@
+using System;
 using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
 {
     protected BaseController checkBase;
+    protected Action hitAction;
+
+    [Header("MuzzleHit")]
+    protected Transform muzzleHitT;
+    protected string bulletHitPath;
+
+    protected virtual void Initialize()
+    {
+        muzzleHitT = GameManager.MuzzleOfHitParent.transform;
+        bulletHitPath = "Weapon/Bullet/BulletHit";
+    }
+
+    protected void AddHitAction(Action action)
+    {
+        if(hitAction == null)
+            hitAction += action;
+    }
+
+    protected void HitActionInvoke()
+    {
+        hitAction.Invoke();
+    }
 
     protected virtual void OnTriggerEnter(Collider other)
     {

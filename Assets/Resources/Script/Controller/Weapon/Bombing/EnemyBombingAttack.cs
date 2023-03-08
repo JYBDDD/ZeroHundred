@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBombingAttack : WeaponBase
@@ -9,11 +7,16 @@ public class EnemyBombingAttack : WeaponBase
     private bool isbool;
     private float time = 0;
 
-    private void OnEnable()
+    protected override void Initialize()
     {
         isbool = true;
         time = 0;
         GameManager.Sound.Play("Art/Sound/Effect/Enemy/Bombing/BombingExplosion");
+    }
+
+    private void OnEnable()
+    {
+        Initialize();
     }
 
     private void Update()
@@ -35,7 +38,8 @@ public class EnemyBombingAttack : WeaponBase
         if (other.gameObject.CompareTag("Player") && isbool)
         {
             // 삭제 시켜주는 구문은 따로 넣어놓음
-            other.GetComponent<PlayerControllerEx>().Stat.AttackDamage(other.GetComponent<PlayerControllerEx>().Stat, 30);       // Bombing 데미지 처리
+            PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
+            pEx.Stat.AttackDamage(pEx.Stat, 30);       // Bombing 데미지 처리
 
             BombingHitShake = true;
         }
