@@ -14,8 +14,7 @@ public class PoolManager : IManager
 
     public GameObject Pop(string objectName,Vector2 position,Quaternion rotation)
     {
-        //객체 풀링을 생성시 삽입정렬하도록 변경
-        //이후 Linq 쿼리 Where 사용하여 특정 조건값에 만족하는 객체 발견시 검색종료 및 반환
+        // Linq 쿼리 Where 사용하여 특정 조건값에 만족하는 객체 발견시 검색종료 및 반환
 
         var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
 
