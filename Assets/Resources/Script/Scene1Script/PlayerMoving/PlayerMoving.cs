@@ -21,7 +21,7 @@ public class PlayerMoving : MonoBehaviour
         GameManager.Sound.Play("Art/Sound/BGM/StartScene_BGM", Define.Sound.bgm);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         PlayerPosMove();
     }
@@ -33,9 +33,23 @@ public class PlayerMoving : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        if (time > 2f && moveCount == 0)
+        if(time > 2f)
         {
-            transform.position = Vector3.Lerp(transform.position, leftPos, Time.deltaTime / 2);
+            switch (moveCount)
+            {
+                case 0:
+                    PlayPosSet(leftPos);
+                    break;
+                case 1:
+                    PlayPosSet(rightPos);
+                    break;
+                case 2:
+                    PlayPosSet(upPos);
+                    break;
+                case 3:
+                    PlayPosSet(downPos);
+                    break;
+            }
 
             if (time > 5f)
             {
@@ -43,37 +57,11 @@ public class PlayerMoving : MonoBehaviour
                 moveCount = Random.Range(0, 4);
             }
         }
+        
+    }
 
-        if (time > 2f && moveCount == 1)
-        {
-            transform.position = Vector3.Lerp(transform.position, rightPos, Time.deltaTime / 2);
-
-            if (time > 5f)
-            {
-                time = 0;
-                moveCount = Random.Range(0, 4);
-            }
-        }
-
-        if (time > 2f && moveCount == 2)
-        {
-            transform.position = Vector3.Lerp(transform.position, upPos, Time.deltaTime / 2);
-
-            if (time > 5f)
-            {
-                time = 0;
-                moveCount = Random.Range(0, 4);
-            }
-        }
-        if (time > 2f && moveCount == 3)
-        {
-            transform.position = Vector3.Lerp(transform.position, downPos, Time.deltaTime / 2);
-
-            if (time > 5f)
-            {
-                time = 0;
-                moveCount = Random.Range(0, 4);
-            }
-        }
+    private void PlayPosSet(Vector3 target)
+    {
+        transform.position = Vector3.Lerp(transform.position, target,Time.deltaTime * 0.5f);
     }
 }

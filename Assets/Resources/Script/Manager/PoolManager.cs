@@ -14,15 +14,10 @@ public class PoolManager : IManager
 
     public GameObject Pop(string objectName,Vector2 position,Quaternion rotation)
     {
-        IEnumerable<GameObject> result = from useList in poolList
-                             where useList.activeSelf == false
-                             where useList.name.Contains(objectName)
-                             select useList;
+        //객체 풀링을 생성시 삽입정렬하도록 변경
+        //이후 Linq 쿼리 Where 사용하여 특정 조건값에 만족하는 객체 발견시 검색종료 및 반환
 
-        var useObj = result.ToList().First();               // 여기서 에러 떠서 찾는중... TODO
-        return useObj;
-
-        /*var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
+        var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
 
         if (firstCheck.Count() <= 0)
             return null;
@@ -36,18 +31,7 @@ public class PoolManager : IManager
                 return o;
             }
         }
-        return null;*/
-
-        /*
-         * 바뀐것
-        객체 풀링을 생성시 삽입정렬하도록 변경
-        이후 IEnumerable 인터페이스를 사용하여 조건에 맞는 첫번째 값 조인
-
-
-        문제사항
-
-        3. 최대체력 이상으로 맞은것으로 판단되는 객체가 회전값 0,0,0으로 맞춰지는 버그 (이거 죽자마자 이진탐색되서 )
-         */
+        return null;
     }
 
     // 요소 삽입 정렬
@@ -61,7 +45,7 @@ public class PoolManager : IManager
             int iMinuse = i - 1;
 
             // 변경시킬 값보다 클경우 종료
-            if (GameManager.Resource.CompareLowCode(poolList[iMinuse].name, poolList[i].name,out char c) == true)
+            if (GameManager.Resource.CompareLowCode(poolList[iMinuse].name, poolList[i].name) == true)
                 break;
             else
             {

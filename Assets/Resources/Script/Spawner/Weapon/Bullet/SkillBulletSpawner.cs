@@ -2,9 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillBulletSpawner : MonoBehaviour
+public class SkillBulletSpawner : WeaponSpawnerBase
 {
-    public float shootRange = 0.5f;
+    protected override void Awake()
+    {
+        base.Awake();
+
+        clipPath = "Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileShot";
+        projectilePath = "Weapon/Bullet/PlayerProjectile";
+        shootRange = 0.5f;
+    }
 
     private void OnEnable()
     {
@@ -23,9 +30,9 @@ public class SkillBulletSpawner : MonoBehaviour
         while (true)
         {
             if (Random.Range(0, 3) >= 2)      // 소리가 너무 겹치지 않도록 랜덤으로 소리생성이 되지 않도록 설정
-                GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileShot");
+                GameManager.Sound.Play(clipPath);
 
-            GameManager.Resource.Instantiate("Weapon/Bullet/PlayerProjectile", transform.position, Quaternion.identity, GameManager.PlayerBulletParent.transform);
+            GameManager.Resource.Instantiate(projectilePath, transform.position, identity, playerB_P);
             yield return new WaitForSeconds(shootRange);
         }
     }

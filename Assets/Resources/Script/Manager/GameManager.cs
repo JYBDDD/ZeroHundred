@@ -63,20 +63,14 @@ public class GameManager : MonoBehaviour
             }
             instance = go.GetComponent<GameManager>();
             DontDestroyOnLoad(go);
-            PlayerBulletParent = new GameObject { name = "#PlayerBulletP" };
-            DontDestroyOnLoad(PlayerBulletParent);
-            EnemyObjectParent = new GameObject { name = "#EnemyObjectP" };
-            DontDestroyOnLoad(EnemyObjectParent);
-            EnemyBulletParent = new GameObject { name = "#EnemyBulletP" };
-            DontDestroyOnLoad(EnemyBulletParent);
-            MuzzleOfHitParent = new GameObject { name = "#MuzzleOfHitP" };
-            DontDestroyOnLoad(MuzzleOfHitParent);
-            DeadEffectParent = new GameObject { name = "#DeadEffectP" };
-            DontDestroyOnLoad(DeadEffectParent);
-            ItemObjectParent = new GameObject { name = "#ItemP" };
-            DontDestroyOnLoad(ItemObjectParent);
-            SoundP = new GameObject { name = "#SoundP" };
-            DontDestroyOnLoad(SoundP);
+
+            CreateDontDestroy(ref PlayerBulletParent,nameof(PlayerBulletParent));
+            CreateDontDestroy(ref EnemyObjectParent, nameof(EnemyObjectParent));
+            CreateDontDestroy(ref EnemyBulletParent, nameof(EnemyBulletParent));
+            CreateDontDestroy(ref MuzzleOfHitParent, nameof(MuzzleOfHitParent));
+            CreateDontDestroy(ref DeadEffectParent, nameof(DeadEffectParent));
+            CreateDontDestroy(ref ItemObjectParent, nameof(ItemObjectParent));
+            CreateDontDestroy(ref SoundP, nameof(SoundP));
 
             Sound.Init();
         }
@@ -92,5 +86,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    private static void CreateDontDestroy(ref GameObject useObj,string name)
+    {
+        useObj = new GameObject { name = $"#{name}" };
+        DontDestroyOnLoad(useObj);
+    }
 }

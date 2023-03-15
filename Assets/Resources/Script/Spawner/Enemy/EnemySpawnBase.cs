@@ -10,29 +10,32 @@ public class EnemySpawnBase : MonoBehaviour
     [SerializeField]
     GameObject bossSpawn;       // 보스 스폰 
 
+    [SerializeField]
+    SpawnPercentData percentData;
+
     public List<GameObject> ObjectList = new List<GameObject>();
 
 
     /// 적 오브젝트 생성 확률
-    protected int enemy1_1Percent;
-    protected int enemy1_2Percent;
-    protected int enemy2Percent;
-    protected int enemy3Percent;
-    protected int enemy4Percent;
-    protected int enemy5Percent;
-    protected int enemyAll_100Percent;
+    [SerializeField,Header("스폰 초기 확률")] protected int enemy1_1Percent;
+    [SerializeField] protected int enemy1_2Percent;
+    [SerializeField] protected int enemy2Percent;
+    [SerializeField] protected int enemy3Percent;
+    [SerializeField] protected int enemy4Percent;
+    [SerializeField] protected int enemy5Percent;
+    protected int enemyAll_100Percent = 0;
 
     /// 적 오브젝트 확률 변동 시간
-    protected float _timePercentCheck;
-    protected float timeCheck;
-    protected int checkInt;
+    protected float _timePercentCheck = 0;
+    protected float timeCheck = 0;
+    protected int checkInt = 0;
 
     /// 적 오브젝트 생성 갯수 변동
-    protected int instantiateCount;
+    protected int instantiateCount = 1;
 
     /// 적 오브젝트 생성 속도 변동
-    protected float minSpeed;     // 최고 생성 속도
-    protected float maxSpeed;     // 최저 생성 속도
+    [SerializeField,Header("스폰 속도")] protected float minSpeed;     // 최고 생성 속도
+    [SerializeField] protected float maxSpeed;     // 최저 생성 속도
 
     void EnemySpawnSystem(string objectPath,int objectCount)
     {
@@ -71,66 +74,45 @@ public class EnemySpawnBase : MonoBehaviour
         EnemySpawnSystem("Enemy/Enemy5", spawnCount);
     }
 
+    private void SpawnSet(float checkTime,int checkPhase,bool boss = false)
+    {
+        if(boss == false)
+        {
+            if (timeCheck > checkTime && checkInt == checkPhase)
+            {
+
+                enemy1_1Percent = percentData.enemy1_1Per[checkPhase];
+                enemy1_2Percent = percentData.enemy1_2Per[checkPhase];
+                enemy2Percent = percentData.enemy2Per[checkPhase];
+                enemy3Percent = percentData.enemy3Per[checkPhase];
+                enemy4Percent = percentData.enemy4Per[checkPhase];
+                enemy5Percent = percentData.enemy5Per[checkPhase];
+                checkInt++;
+
+                WeightRandom();
+            }
+        }
+        else
+        {
+            if (timeCheck > checkTime && checkInt == checkPhase)                 // 보스 생성 구문
+            {
+                checkInt++;
+                bossSpawn.SetActive(true);
+                gameObject.SetActive(false);                // 보스생성후 EnemyPhase 임시 정지
+            }
+        }
+    }
+
     protected void SpawnSystem_PerCentManageMent()      // 적 스폰 확률 계산
     {
         _timePercentCheck += Time.deltaTime;
         timeCheck = _timePercentCheck;
 
-        if (timeCheck > 30 && checkInt == 0) 
-        {
-            enemy1_1Percent = 40;
-            enemy1_2Percent = 25;
-            enemy2Percent = 10;
-            enemy3Percent = 10;
-            enemy4Percent = 10;
-            enemy5Percent = 5;
-            checkInt++;
-
-            WeightRandom();
-        }
-        if(timeCheck > 60 && checkInt == 1)
-        {
-            enemy1_1Percent = 30;
-            enemy1_2Percent = 20;
-            enemy2Percent = 10;
-            enemy3Percent = 15;
-            enemy4Percent = 15;
-            enemy5Percent = 10;
-            checkInt++;
-
-            WeightRandom();
-        }
-        if(timeCheck > 90 && checkInt == 2)
-        {
-            enemy1_1Percent = 15;
-            enemy1_2Percent = 15;
-            enemy2Percent = 15;
-            enemy3Percent = 20;
-            enemy4Percent = 20;
-            enemy5Percent = 15;
-            checkInt++;
-
-            WeightRandom();
-        }
-        if(timeCheck > 120 && checkInt == 3)
-        {
-            enemy1_1Percent = 5;
-            enemy1_2Percent = 10;
-            enemy2Percent = 25;
-            enemy3Percent = 20;
-            enemy4Percent = 20;
-            enemy5Percent = 20;
-            checkInt++;
-
-            WeightRandom();
-        }
-        if(timeCheck > 1/* && checkInt == 4*/)                 // 보스 생성 구문
-        {
-            checkInt++;
-            bossSpawn.SetActive(true);
-            gameObject.SetActive(false);                // 보스생성후 EnemyPhase 임시 정지
-        }
-
+        SpawnSet(30, 0);
+        SpawnSet(60, 1);
+        SpawnSet(90, 2);
+        SpawnSet(120, 3);
+        SpawnSet(150, 4, true);
     }
     protected int SpawnSystem_Counting()               // 적 스폰 갯수 계산
     {

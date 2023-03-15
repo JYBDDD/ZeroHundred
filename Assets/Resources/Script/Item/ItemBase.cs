@@ -16,6 +16,35 @@ public class ItemBase : MonoBehaviour
     protected bool ClipBool = false;
 
     protected float _time = 0;
+
+
+    protected virtual void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        DestroyClip = GetComponent<Animation>();
+    }
+
+    protected virtual void OnEnable()
+    {
+        rigid.velocity = new Vector3(Random.Range(-2f, 2f), Random.Range(-2f, 2f));
+        DestroyClip.enabled = false;
+    }
+
+    protected virtual void OnDisable()
+    {
+        rigid.velocity = new Vector3(0, 0, 0);
+    }
+
+    protected virtual void Update()
+    {
+        ItemDestroy();
+        if (_time > 7f && ClipBool == false)
+        {
+            DestroyClip.enabled = true;
+            ClipBool = true;
+        }
+    }
+
     /// <summary>
     /// Item 일정시간이 지난 후 삭제 (Update용) 깜빡이는 애니메이션 재생 용도 , 플레이어 체력이 0일시 즉시 삭제
     /// </summary>
@@ -29,5 +58,35 @@ public class ItemBase : MonoBehaviour
             ClipBool = false;
             GameManager.Pool.Push(gameObject);
         }
+    }
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
+        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
+        if (other.gameObject.CompareTag("ItemLimit"))
+        {
+            Vector3 dir = transform.position - other.transform.position;        // RigidBody - Freeze Position 으로 z값 잠금
+            rigid.AddForce((dir).normalized * 100f);
+        }
+    }
+
+    protected virtual void OnTriggerStay(Collider other)
+    {
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
+        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
+
+        if (other.gameObject.CompareTag("ItemLimit"))
+        {
+            rigid.velocity = new Vector3(0, 0);
+            Vector3 dir = transform.position - other.transform.position;        // RigidBody - Freeze Position 으로 z값 잠금
+            rigid.AddForce((dir).normalized * 50f);
+        }
+    }
+
+    protected virtual void OnTriggerExit(Collider other)
+    {
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
+        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
     }
 }
