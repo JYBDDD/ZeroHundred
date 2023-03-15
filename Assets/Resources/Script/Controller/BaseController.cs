@@ -9,6 +9,7 @@ public class BaseController : MonoBehaviour
     public bool animBool = false;
 
     protected string id = string.Empty;
+    [SerializeField]
     protected Stat stat = new Stat();
     public Stat Stat { get => stat; }
 
@@ -102,7 +103,7 @@ public class BaseController : MonoBehaviour
 
 
             // 피격 애니메이션과 혼합
-            animation.Blend(sb.ToString(), 10, 0.03f);
+            animation.Blend(sb.ToString(), 1, 0.01f);
 
             animBool = false;
             Invoke("EnemyReturnState", 0.5f);

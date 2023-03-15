@@ -31,14 +31,14 @@ public class ResourceManager
         PoolManager pool = GameManager.Pool;
         if (parent != null)
         {
-            for (int i = 0; i < parent.childCount; i++)
+            StringBuilder sb = new StringBuilder();
+            string[] nameArr = path.Split('/');
+            sb.Append(nameArr[nameArr.Length - 1] + "(Clone)");
+
+            GameObject popItem = pool.Pop(sb.ToString(), position, rotation);
+            if (popItem != null)
             {
-                Transform trans = parent.GetChild(i);
-                GameObject popItem = pool.Pop(trans.name, position, rotation);
-                if (popItem != null)
-                {
-                    return popItem;
-                }
+                return popItem;
             }
         }
 
@@ -89,7 +89,7 @@ public class ResourceManager
     /// 문자열 아스키코드값을 비교하여 compareA값이 작다면 true
     /// </summary>
     /// <returns></returns>
-    public bool CompareLowCode(string compareA,string compareB)
+    public bool CompareLowCode(string compareA,string compareB,out char c)
     {
         byte[] cA = Encoding.ASCII.GetBytes(compareA);
         byte[] cB = Encoding.ASCII.GetBytes(compareB);
@@ -97,17 +97,27 @@ public class ResourceManager
         for(int i = 0; i < cA.Length; ++i)
         {
             if (i > cB.Length)
+            {
+                c = '>';
                 return false;
+            }
 
             var codeA = int.Parse(cA[i].ToString());
             var codeB = int.Parse(cB[i].ToString());
 
             if (codeA > codeB)
+            {
+                c = '>';
                 return false;
+            }
             else if (codeB > codeA)
+            {
+                c = '<';
                 return true;
+            }
         }
 
+        c = '=';
         return false;
     }
 }

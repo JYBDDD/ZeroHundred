@@ -124,7 +124,7 @@ public class EnemySpawnBase : MonoBehaviour
 
             WeightRandom();
         }
-        if(timeCheck > 150 && checkInt == 4)                 // 焊胶 积己 备巩
+        if(timeCheck > 1/* && checkInt == 4*/)                 // 焊胶 积己 备巩
         {
             checkInt++;
             bossSpawn.SetActive(true);
