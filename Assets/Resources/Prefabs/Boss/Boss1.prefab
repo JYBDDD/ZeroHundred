@@ -148,8 +148,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animBool: 0
+  stat:
+    hp: 0
+    maxHp: 0
+    dropScore: 0
   machineGun: {fileID: 489174203619550807}
   missileLauncher: {fileID: 6222675963318584320}
+  specialHpSub: 500
 --- !u!64 &954434086933776594
 MeshCollider:
   m_ObjectHideFlags: 0

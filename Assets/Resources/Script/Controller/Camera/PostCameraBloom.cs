@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class PostCameraBloom : MonoBehaviour        // PostProcessing (Bloom)Àü¿
             {
                 isBool = true;
                 b_Volume.isGlobal = true;
-                GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/FlashBangRinging");     // ¼¶±¤ ÀÌ¸í »ç¿îµå
+                GameManager.Sound.Play(ObjSound_P.FlashBangRinging);     // ¼¶±¤ ÀÌ¸í »ç¿îµå
             }
 
             time += Time.deltaTime;

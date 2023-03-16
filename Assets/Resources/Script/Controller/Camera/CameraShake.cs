@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Path;
 
 public class CameraShake : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class CameraShake : MonoBehaviour
         originRange = shakeRange;
         originDuration = duration;
 
-        GameManager.Sound.Play("Art/Sound/BGM/GameScene_BGM", Define.Sound.bgm);
+        GameManager.Sound.Play(SceneSound_P.GameSceneBGM, Define.Sound.bgm);
     }
 
     private void FixedUpdate()

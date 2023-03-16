@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Path;
 
 public class PlayerMoving : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class PlayerMoving : MonoBehaviour
         rightPos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 4.66f);
         upPos = new Vector3(transform.position.x + 5f, transform.position.y, transform.position.z);
         downPos = new Vector3(transform.position.x - 14f, transform.position.y, transform.position.z);
-        GameManager.Sound.Play("Art/Sound/BGM/StartScene_BGM", Define.Sound.bgm);
+        GameManager.Sound.Play(SceneSound_P.StartSceneBGM, Define.Sound.bgm);
     }
 
     private void FixedUpdate()

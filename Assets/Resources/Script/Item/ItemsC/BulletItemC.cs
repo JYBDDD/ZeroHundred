@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +32,7 @@ public class BulletItemC : ItemBase
         if (other.gameObject.CompareTag("Player"))
         {
             BulletSpawner.ShootRange -= scriptableObjectC.ShootRangeUp;
-            GameManager.Sound.Play("Art/Sound/Effect/Item/ItemGet");
+            GameManager.Sound.Play(ObjSound_P.ItemGet);
             GameManager.Pool.Push(gameObject);
         }
     }

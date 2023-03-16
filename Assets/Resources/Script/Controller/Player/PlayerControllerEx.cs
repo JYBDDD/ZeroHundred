@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -117,7 +118,7 @@ public class PlayerControllerEx : BaseController
     /// </summary>
     public void PlayerDead()
     {
-        GameManager.Sound.Play("Art/Sound/Effect/Player/PlayerDie");
+        GameManager.Sound.Play(ObjSound_P.PlayerDie);
         // Æø¹ß ÀÌÆåÆ®
         GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
         gameObject.SetActive(false);

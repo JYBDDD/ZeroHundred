@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,7 @@ public class LoginSceneButton : MonoBehaviour
     public void LoginClick()
     {
         GameManager.BackendMain.SignInLogin(LoginTextID.text,LoginTextPW.text);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
         // 해당 아이디 및 비밀번호가 맞다면 다음씬으로 이동
 
     }
@@ -43,13 +44,13 @@ public class LoginSceneButton : MonoBehaviour
     {
         LoginWindow.SetActive(false);
         NewSignUpWindow.SetActive(true);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     public void SignUpClick()
     {
         GameManager.BackendMain.CustomSignUp(CreateTextID.text, CreateTextPW.text,CreateTextNick.text);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     private void Awake()

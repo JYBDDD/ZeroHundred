@@ -1,3 +1,5 @@
+using Path;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +10,8 @@ public class Boss1Controller : EnemyBase
     private GameObject machineGun;
     [SerializeField]
     private GameObject missileLauncher;
+    [SerializeField]
+    private int specialHpSub;
 
     public static Stat BossStatStatic;
 
@@ -44,12 +48,7 @@ public class Boss1Controller : EnemyBase
 
         StartMove();
 
-        if(FlashBangBool == false && stat.Hp == 800 || stat.Hp == 500 || stat.Hp == 300)        // 체력이 일정량 접근시
-        {
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/FlashBang");
-            GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB",transform.position,Quaternion.identity,GameManager.EnemyBulletParent.transform);
-            FlashBangBool = true;
-        }
+        SpecialPattern();
     }
 
     private void StartMove()
@@ -60,33 +59,26 @@ public class Boss1Controller : EnemyBase
             gameObject.transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0.05f, 0.05f, 0.05f), Time.deltaTime);
         }
         #region Boss1 첫 생성시 속도 조절
-        if (startTime >= 1.5f && startCount == 0)
-        {
-            startCount++;
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0.8f));
-        }
-        if (startTime >= 1.7f && startCount == 1)
-        {
-            startCount++;
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0.6f));
-        }
-        if (startTime >= 1.9f && startCount == 2)
-        {
-            startCount++;
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0.4f));
-        }
-        if (startTime >= 2.1f && startCount == 3)
-        {
-            startCount++;
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0.2f));
-        }
-        if (startTime >= 2.3f && startCount == 4)
-        {
-            startCount++;
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0));
-            StartCoroutine(BossPatternCor());
-        }
+        BossSpeedAdjust(1.5f, 0, 0.8f);
+        BossSpeedAdjust(1.7f, 1, 0.6f);
+        BossSpeedAdjust(1.9f, 2, 0.4f);
+        BossSpeedAdjust(2.1f, 3, 0.2f);
+        BossSpeedAdjust(2.3f, 4, 0,()=> { StartCoroutine(BossPatternCor()); });
         #endregion
+    }
+
+    private void BossSpeedAdjust(float checkTime, int checkCount, float speed, Action addAction = null)
+    {
+        if (startTime >= checkTime && startCount == checkCount)
+        {
+            startCount++;
+            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, speed));
+            
+            if(addAction != null)
+            {
+                addAction.Invoke();
+            }
+        }
     }
 
     IEnumerator BossPatternCor()
@@ -98,7 +90,7 @@ public class Boss1Controller : EnemyBase
             if (time > 10)
             {
                 time = 0;
-                switch (Random.Range(0, 5))           // 패턴을 랜덤값으로 결정  (0,5)
+                switch (UnityEngine.Random.Range(0, 5))           // 패턴을 랜덤값으로 결정  (0,5)
                 {
                     case 0:
                         MachineGunFiring();
@@ -128,7 +120,7 @@ public class Boss1Controller : EnemyBase
     public void BossPartternStop()
     {
         StopCoroutine(BossPatternCor());
-        GameManager.Sound.Play("Art/Sound/BGM/GameScene_BGM");      // 보스 처치후 다시 게임씬_BGM 로드
+        GameManager.Sound.Play(SceneSound_P.GameSceneBGM);      // 보스 처치후 다시 게임씬_BGM 로드
         machineGun.SetActive(false);
         missileLauncher.SetActive(false);
     }
@@ -157,8 +149,8 @@ public class Boss1Controller : EnemyBase
         int aroundFireA = 50;
         int aroundFireB = 43;
         int aroundFireC = 32;
-        int aroundFire1 = Random.Range(0,2) % 2 == 0 ? aroundFireA : aroundFireB;
-        int aroundFireNum = Random.Range(0,2) % 2 == 0 ? aroundFire1 : aroundFireC;
+        int aroundFire1 = UnityEngine.Random.Range(0,2) % 2 == 0 ? aroundFireA : aroundFireB;
+        int aroundFireNum = UnityEngine.Random.Range(0,2) % 2 == 0 ? aroundFire1 : aroundFireC;
 
         for(int i = 0; i < aroundFireA; i++)
         {
@@ -176,7 +168,7 @@ public class Boss1Controller : EnemyBase
         if (time < 7f && stat.Hp > 0 && gameObject.activeSelf)
         {
             Invoke("AroundFire", 1f);
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/BossAroundShot");
+            GameManager.Sound.Play(ObjSound_P.BossAroundShot);
         }
     }
 
@@ -189,7 +181,7 @@ public class Boss1Controller : EnemyBase
         {
             GameObject bullet = GameManager.Resource.Instantiate("Weapon/Rocket/Rocket Projectile", transform.position, Quaternion.identity, GameManager.EnemyBulletParent.transform);
             Rigidbody rigid = bullet.GetComponent<Rigidbody>();
-            Vector2 dirvec = new Vector2(Random.Range(-0.5f, 0.5f), -1);
+            Vector2 dirvec = new Vector2(UnityEngine.Random.Range(-0.5f, 0.5f), -1);
             rigid.AddForce(dirvec.normalized * 5f, ForceMode.Impulse);
         }
 
@@ -207,13 +199,23 @@ public class Boss1Controller : EnemyBase
 
         if(stat.Hp > 0 && gameObject.activeSelf)
         {
-            Vector2 dirvec = new Vector2(Random.Range(-2.6f, 2.6f), Random.Range(-4.6f, 2.5f));
+            Vector2 dirvec = new Vector2(UnityEngine.Random.Range(-2.6f, 2.6f), UnityEngine.Random.Range(-4.6f, 2.5f));
             GameObject bullet = GameManager.Resource.Instantiate("Weapon/Bombing/Bombing", dirvec, Quaternion.identity, GameManager.EnemyBulletParent.transform);
         }
         if (time < 8.5f && stat.Hp > 0 && gameObject.activeSelf)
             Invoke("AirMine", 0.25f);
     }
 
+    // 특수 패턴
+    private void SpecialPattern()
+    {
+        if (FlashBangBool == false && stat.Hp == specialHpSub)        // 체력이 일정량 접근시
+        {
+            GameManager.Sound.Play(ObjSound_P.FlashBang);
+            GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB", transform.position, Quaternion.identity, GameManager.EnemyBulletParent.transform);
+            FlashBangBool = true;
+        }
+    }
 
     public void BossDead()
     {
@@ -223,7 +225,7 @@ public class Boss1Controller : EnemyBase
         {
             float time = 0;
             float deadEffectCall = 0;
-            Vector2 dirvec = new Vector2(Random.Range(-2f, 2f), Random.Range(1.5f, 3f));        // DeadEffect 랜덤 위치값
+            Vector2 dirvec = new Vector2(UnityEngine.Random.Range(-2f, 2f), UnityEngine.Random.Range(1.5f, 3f));        // DeadEffect 랜덤 위치값
 
             while (true)
             {
@@ -238,7 +240,7 @@ public class Boss1Controller : EnemyBase
 
                 if(time > 3f)
                 {
-                    GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/BossDie");
+                    GameManager.Sound.Play(ObjSound_P.BossDie);
                     GameManager.Resource.Instantiate("Boss/Boss1FinalDeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
                     GameManager.Pool.Push(gameObject);
                     yield break;
@@ -253,7 +255,7 @@ public class Boss1Controller : EnemyBase
     {
         if(fanShotSoundBool == false)
         {
-            GameManager.Sound.Play("Art/Sound/Effect/Enemy/Boss/BossRoketShot");
+            GameManager.Sound.Play(ObjSound_P.BossRocketShot);
             fanShotSoundBool = true;
         }
     }

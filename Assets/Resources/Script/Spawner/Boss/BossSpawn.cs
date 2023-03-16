@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class BossSpawn : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Resource.Instantiate("Boss/Boss1", transform.position, Quaternion.Euler(-90, 0, 0), GameManager.EnemyObjectParent.transform);
-        GameManager.Sound.Play("Art/Sound/BGM/Boss_BGM", Define.Sound.bgm);
+        GameManager.Sound.Play(SceneSound_P.BossBGM, Define.Sound.bgm);
     }
 
     private void Update()

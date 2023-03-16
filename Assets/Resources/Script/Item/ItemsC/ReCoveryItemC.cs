@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class ReCoveryItemC : ItemBase
         {
             if (GameManager.Player.playerController.Stat.Hp < 100)       // 플레이어의 체력이 최대체력이 아닐시만 습득
             {
-                GameManager.Sound.Play("Art/Sound/Effect/Item/ItemGet");
+                GameManager.Sound.Play(ObjSound_P.ItemGet);
                 GameManager.Player.playerController.Stat.Hp += scriptableObjectC.HpUp;
                 GameManager.Pool.Push(gameObject);
             }

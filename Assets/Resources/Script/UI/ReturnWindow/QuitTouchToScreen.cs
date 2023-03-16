@@ -1,3 +1,4 @@
+using SceneN;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,6 @@ public class QuitTouchToScreen : MonoBehaviour
 {
     public void QuitToLobby()
     {
-        SceneManager.LoadScene("Scene 1");
+        SceneManager.LoadScene(SceneName.LobbyScene);
     }
 }

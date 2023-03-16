@@ -4,6 +4,8 @@ using UnityEngine;
 using BackEnd;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Path;
+using SceneN;
 
 public class BackendMain
 {
@@ -22,13 +24,13 @@ public class BackendMain
 
         if(result.IsSuccess())
         {
-            SceneManager.LoadScene("Scene 1");      // 씬 이동
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UISuccess");
+            SceneManager.LoadScene(SceneName.LobbyScene);      // 씬 이동
+            GameManager.Sound.Play(UI_P.UISuccess);
         }
         else
         {
             LoginSceneButton.GUILoginErrorBool = true;
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UIFail");
+            GameManager.Sound.Play(UI_P.UIFail);
         }
     }
 
@@ -44,7 +46,7 @@ public class BackendMain
             {
                 Backend.BMember.UpdateNickname(nickName);
                 LoginSceneButton.GUICreateSuccessBool = true;
-                GameManager.Sound.Play("Art/Sound/Effect/UI/UISuccess");
+                GameManager.Sound.Play(UI_P.UISuccess);
 
                 // 아이디 생성시 사용할 값 미리 적용 (오류 방지)
                 Param param = new Param();                  
@@ -57,13 +59,13 @@ public class BackendMain
             else
             {
                 LoginSceneButton.GUICreateErrorBool = true;
-                GameManager.Sound.Play("Art/Sound/Effect/UI/UIFail");
+                GameManager.Sound.Play(UI_P.UIFail);
             }
         }
         else
         {
             LoginSceneButton.GUICreateBlankBool = true;
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UIFail");
+            GameManager.Sound.Play(UI_P.UIFail);
         }
 
     }

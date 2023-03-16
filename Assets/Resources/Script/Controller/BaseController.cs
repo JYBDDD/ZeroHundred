@@ -1,3 +1,4 @@
+using Path;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -80,7 +81,7 @@ public class BaseController : MonoBehaviour
     {
         GameManager.Pool.Push(gameObject);
         GameManager.Resource.Instantiate("Public/DeadEffect", transform.position, Quaternion.identity, GameManager.DeadEffectParent.transform);
-        GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyDie/EnemyDie");
+        GameManager.Sound.Play(ObjSound_P.EnemyDie);
         GameManager.SCORE += stat.DropScore;        // Á¡¼ö È¹µæ
         GameManager.Resource.ItemInstantiate(transform.position, Quaternion.identity, GameManager.ItemObjectParent.transform);  // ³»ºÎ¿¡¼­ 10% È®·ü·Î ·£´ý ¾ÆÀÌÅÛ »ý¼º
     }

@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class Enemy5Controller : EnemyBase
         ObjectList.Add(gameObject);
         StartCoroutine(BombWarning());
 
-        GameManager.Sound.Play("Art/Sound/Effect/Enemy/Enemy5Move/Enemy5MoveSound");
+        GameManager.Sound.Play(ObjSound_P.Enemy5Move);
     }
 
     private void OnDisable()

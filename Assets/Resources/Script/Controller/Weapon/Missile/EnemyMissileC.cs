@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class EnemyMissileC : MissileBase
     {
         waitTime = 0;
         speed = 0;
-        GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyMissile/EnemyMissileShot");
+        GameManager.Sound.Play(ObjSound_P.EnemyMisslieShot);
     }
 
     private void FixedUpdate()
@@ -28,7 +29,7 @@ public class EnemyMissileC : MissileBase
         if(transform.position.z > 0.45f)        // 맵 뒤로 이동시 폭발후 즉시 삭제
         {
             if (Random.Range(0, 3) >= 2)      // 소리가 너무 겹치지 않도록 랜덤으로 소리생성이 되지 않도록 설정
-                GameManager.Sound.Play("Art/Sound/Effect/Enemy/EnemyMissile/EnemyMissileExplosion");
+                GameManager.Sound.Play(ObjSound_P.EnemyMissileExplosion);
             GameManager.Pool.Push(gameObject);
             GameManager.Resource.Instantiate("Weapon/Missile/EnemyMissileHit", gameObject.transform.position, Quaternion.identity, GameManager.MuzzleOfHitParent.transform);
             return;

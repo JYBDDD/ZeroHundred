@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using BackEnd;
 using UnityEngine.SceneManagement;
 using GooglePlayGames.BasicApi;
+using Path;
+using SceneN;
 
 public class GoogleManager : MonoBehaviour
 {
@@ -58,8 +60,8 @@ public class GoogleManager : MonoBehaviour
             BackendReturnObject BRO = Backend.BMember.AuthorizeFederation(GetTokens(), FederationType.Google);
 
             // 씬 이동
-            SceneManager.LoadScene("Scene 1");      
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UISuccess");
+            SceneManager.LoadScene(SceneName.LobbyScene);      
+            GameManager.Sound.Play(UI_P.UISuccess);
 
         }
         // 첫 가입 일시
@@ -71,7 +73,7 @@ public class GoogleManager : MonoBehaviour
                 if (!success)
                 {
                     LogText.text = "Google Login Fail";
-                    GameManager.Sound.Play("Art/Sound/Effect/UI/UIFail");
+                    GameManager.Sound.Play(UI_P.UIFail);
                     logAnim.SetBool("SetLog", true);
                     logOneShot = 0;
                 }
@@ -100,14 +102,14 @@ public class GoogleManager : MonoBehaviour
         if (Social.localUser.authenticated == true)     // 구글 로그아웃
         {
             ((PlayGamesPlatform)Social.Active).SignOut();
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
-            SceneManager.LoadScene("LoginScene");      // 씬 이동
+            GameManager.Sound.Play(UI_P.UITap);
+            SceneManager.LoadScene(SceneName.LoginScene);      // 씬 이동
         }
         else                                            // 커스텀 로그아웃
         {
             Backend.BMember.Logout();       // 커스텀 아이디는 별도로 토큰을 받지않습니다 (토큰 항상 NULL)
-            GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
-            SceneManager.LoadScene("LoginScene");      // 씬 이동
+            GameManager.Sound.Play(UI_P.UITap);
+            SceneManager.LoadScene(SceneName.LoginScene);      // 씬 이동
         }
 
     }

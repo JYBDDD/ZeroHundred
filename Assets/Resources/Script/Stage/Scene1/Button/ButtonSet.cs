@@ -1,3 +1,5 @@
+using Path;
+using SceneN;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +12,7 @@ public class ButtonSet : MonoBehaviour
     {
         GameManager.Pool.Clear();
         GameManager.Sound.Clear();
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene(SceneName.GameScene);
     }
 
     [SerializeField]
@@ -27,7 +29,7 @@ public class ButtonSet : MonoBehaviour
     public void SoundButtonClick()
     {
         soundWindow.SetActive(true);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     public void SoundButtonClickExit()
@@ -36,7 +38,7 @@ public class ButtonSet : MonoBehaviour
             Time.timeScale = 1;
 
         soundWindow.SetActive(false);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     public void Mute()
@@ -53,7 +55,7 @@ public class ButtonSet : MonoBehaviour
         SoundManager.EffSliderPitch = 1f;
         bgmSlider.value = 1f;
         effSlider.value = 1f;
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     [SerializeField]
@@ -62,13 +64,13 @@ public class ButtonSet : MonoBehaviour
     public void RankButtonClick()
     {
         rankWindow.SetActive(true);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     public void RankExitButton()
     {
         rankWindow.SetActive(false);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
 
@@ -78,7 +80,7 @@ public class ButtonSet : MonoBehaviour
     public void ExitButtonClick()
     {
         exitWindow.SetActive(true);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 
     public void YesExitClick()
@@ -89,6 +91,6 @@ public class ButtonSet : MonoBehaviour
     public void NoExitClick()
     {
         exitWindow.SetActive(false);
-        GameManager.Sound.Play("Art/Sound/Effect/UI/UITap");
+        GameManager.Sound.Play(UI_P.UITap);
     }
 }

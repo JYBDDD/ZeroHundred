@@ -1,3 +1,4 @@
+using Path;
 using UnityEngine;
 
 public class EnemyBombingAttack : WeaponBase
@@ -11,7 +12,7 @@ public class EnemyBombingAttack : WeaponBase
     {
         isbool = true;
         time = 0;
-        GameManager.Sound.Play("Art/Sound/Effect/Enemy/Bombing/BombingExplosion");
+        GameManager.Sound.Play(ObjSound_P.BombingExplosion);
     }
 
     private void OnEnable()

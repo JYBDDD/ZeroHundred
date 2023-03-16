@@ -1,3 +1,4 @@
+using Path;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class SkillItemC : ItemBase
         {
             if (GameManager.Player.playerController.PlayerSkillCount < 3)        // 플레이어 스킬카운트가 최대개수를 넘지 않는다면 습득
             {
-                GameManager.Sound.Play("Art/Sound/Effect/Item/ItemGet");
+                GameManager.Sound.Play(ObjSound_P.ItemGet);
                 GameManager.Player.playerController.PlayerSkillCount++;
                 GameManager.Pool.Push(gameObject);
             }
