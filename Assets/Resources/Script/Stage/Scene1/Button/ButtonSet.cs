@@ -1,9 +1,6 @@
 using Path;
 using SceneN;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonSet : MonoBehaviour
@@ -12,7 +9,7 @@ public class ButtonSet : MonoBehaviour
     {
         GameManager.Pool.Clear();
         GameManager.Sound.Clear();
-        SceneManager.LoadScene(SceneName.GameScene);
+        SceneConsole.LoadGame();
     }
 
     [SerializeField]

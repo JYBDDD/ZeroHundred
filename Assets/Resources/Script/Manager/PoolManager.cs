@@ -16,20 +16,28 @@ public class PoolManager : IManager
     {
         // Linq 쿼리 Where 사용하여 특정 조건값에 만족하는 객체 발견시 검색종료 및 반환
 
-        var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
-
-        if (firstCheck.Count() <= 0)
-            return null;
-
-        foreach (var o in firstCheck)
+        try
         {
-            if (o.activeSelf == false)
+            var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
+
+            if (firstCheck.Count() <= 0)
+                return null;
+
+            foreach (var o in firstCheck)
             {
-                o.transform.SetPositionAndRotation(position, rotation);
-                o.gameObject.SetActive(true);
-                return o;
+                if (o.activeSelf == false)
+                {
+                    o.transform.SetPositionAndRotation(position, rotation);
+                    o.gameObject.SetActive(true);
+                    return o;
+                }
             }
         }
+        catch
+        {
+            Debug.LogError("Pop 진행중 에러발생");
+        }
+
         return null;
     }
 

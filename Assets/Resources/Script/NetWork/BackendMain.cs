@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Path;
 using SceneN;
@@ -11,11 +10,9 @@ public class BackendMain
 {
     string rankuuid = "779da490-565d-11ec-a8be-750fdbf90167";       // 랭킹테이블 uuid 값
 
-
-
     public void BackendCallSetting()             // 게임 첫 스타트시 반드시 호출되야하는 메소드 (LoginSceneButton 에서 호출중)
     {
-        var bro = Backend.Initialize(true);
+        Backend.Initialize(true);
     }
 
     public void SignInLogin(string id,string password)      // 로그인
@@ -24,7 +21,7 @@ public class BackendMain
 
         if(result.IsSuccess())
         {
-            SceneManager.LoadScene(SceneName.LobbyScene);      // 씬 이동
+            SceneConsole.LoadLobby();
             GameManager.Sound.Play(UI_P.UISuccess);
         }
         else
