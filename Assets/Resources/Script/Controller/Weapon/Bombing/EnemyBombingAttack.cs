@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class EnemyBombingAttack : WeaponBase
 {
-    public static bool BombingHitShake = false;
-
     private bool isbool;
     private float time = 0;
 
@@ -41,8 +39,6 @@ public class EnemyBombingAttack : WeaponBase
             // 삭제 시켜주는 구문은 따로 넣어놓음
             PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
             pEx.Stat.AttackDamage(pEx.Stat, 30);       // Bombing 데미지 처리
-
-            BombingHitShake = true;
         }
     }
 }

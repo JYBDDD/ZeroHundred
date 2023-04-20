@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EnemyRocketC : WeaponBase
 {
-    public static bool RocketHitShake = false;  // 카메라 쉐이크(Projectile)
-
     [SerializeField]
     private TrailRenderer trailRenderer;
     private float time = 0;
@@ -56,8 +54,6 @@ public class EnemyRocketC : WeaponBase
         {
             GameManager.Pool.Push(gameObject);
             GameManager.Resource.Instantiate(roketHitPath, transform.position, Quaternion.identity, muzzleHitT);
-
-            RocketHitShake = true;
 
             GameManager.Sound.Play(roketHitSoundPath);
             GameManager.Player.playerController.Stat.AttackDamage(obj.GetComponent<PlayerControllerEx>().Stat, 10);        // 로켓 데미지 처리

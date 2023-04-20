@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UniRx.Triggers;
+using UniRx;
 
-public class PlayJoyStick : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDragHandler        // Panel 삭제시 레버가 클릭지점을 따라가지 않음 (참고※)
+public class PlayJoyStick : MonoBehaviour,IBeginDragHandler,IDragHandler, IEndDragHandler        // Panel 삭제시 레버가 클릭지점을 따라가지 않음 (참고※)
 {
     public static PlayerControllerEx playerControllerEx;
 
@@ -25,12 +25,8 @@ public class PlayJoyStick : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndD
     private void Start()
     {
         playerControllerEx = GameManager.Player.playerController;
-    }
-
-    private void Update()
-    {
-        if(isMove)
-            playerControllerEx.Movement(joyVec);
+        // - UniRx 조이스틱 이동값에 따른 값 플레이어에 전달
+        this.UpdateAsObservable().Where(_ => isMove).Select(_ => joyVec).Subscribe(_=> playerControllerEx.Movement(joyVec));
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -50,7 +46,7 @@ public class PlayJoyStick : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndD
         Vector2 DragPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         joyVec = (DragPosition - stickFirstPosition).normalized; // lever 드래그 방향,위치값
 
-        float stickDistance = Vector3.Distance(DragPosition, stickFirstPosition);  // 드래그위치 - 스틱의 첫번째 위치
+        Vector3.Distance(DragPosition, stickFirstPosition);  // 드래그위치 - 스틱의 첫번째 위치
 
         joyStick.transform.position = DragPosition;
     }

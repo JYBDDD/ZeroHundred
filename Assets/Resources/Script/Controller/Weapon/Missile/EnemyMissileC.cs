@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class EnemyMissileC : MissileBase
 {
-    public static bool MissileHitShake = false;
-
     private float speed = 0.0f;             // 유도미사일에 Movement2D 사용하지 않고 자체적으로 구현함
     Vector3 lookVec = Vector3.zero;
     private float waitTime = 0.0f;

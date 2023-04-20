@@ -1,7 +1,9 @@
 using System;
+using UniRx.Triggers;
+using UniRx;
 using UnityEngine;
 
-public class WeaponBase : MonoBehaviour//,IHit
+public class WeaponBase : MonoBehaviour
 {
     protected BaseController checkBase;
     protected Action hitAction;
@@ -43,6 +45,12 @@ public class WeaponBase : MonoBehaviour//,IHit
             // 单固瘤 贸府
             DamageProcess(other);
 
+            // 墨皋扼 溅捞农 贸府
+            if(other.gameObject.CompareTag("Player") && !gameObject.name.Contains("Player"))
+            {
+                this.UpdateAsObservable().Subscribe(_ => CameraShake.shakeCam.HitPlayer_Shake());
+            }
+
             // Hp啊 0老版快 角青
             if (HPZeroCheck(thisComponent) == true)
             {
@@ -52,7 +60,7 @@ public class WeaponBase : MonoBehaviour//,IHit
                 }
                 if(thisType == Define.ObjType.Player)
                 {
-                    thisComponent.GetComponent<PlayerControllerEx>().PlayerDead();
+                    GameManager.Instance.EndGame_NoticeObserver();
                 }
                 if(thisType == Define.ObjType.Boss)
                 {

@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
-
     public static GameManager Instance 
     {
         get 
@@ -22,6 +20,7 @@ public class GameManager : MonoBehaviour
     SoundManager _sound = new SoundManager();
     BackendMain _backend = new BackendMain();
     GoogleManager _google = new GoogleManager();
+    AsyncTask _task = new AsyncTask();
 
     public static PlayerManager Player { get => Instance._player; }
     public static ResourceManager Resource { get => Instance._resource; }
@@ -30,24 +29,20 @@ public class GameManager : MonoBehaviour
     public static SoundManager Sound { get => Instance._sound; }
     public static BackendMain BackendMain { get => Instance._backend; }
     public static GoogleManager GoogleM { get => Instance._google; }
+    public static AsyncTask AsyncTask { get => Instance._task; }
 
     // Player
     public static GameObject PlayerBulletParent;    // Player Weapon 부모
-
     // Enemy
     public static GameObject EnemyObjectParent;     // Enemy Object 부모
     public static GameObject EnemyBulletParent;     // Enemy Weapon 부모
-
     // Item
     public static GameObject ItemObjectParent;      // Itme Object 부모
-
     // 공용
     public static GameObject MuzzleOfHitParent;     // Muzzle,HitEffect 부모
     public static GameObject DeadEffectParent;      // DeadEffect 부모
-
     // Sound
     public static GameObject SoundP;                // Sound 부모
-
     // 점수
     public static int SCORE = 0;                    // 점수로 사용되는 스코어
 
@@ -76,19 +71,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void OnUpdate()
-    {
-        
-    }
-    
-    public static void Clear()
-    {
-
-    }
-
     private static void CreateDontDestroy(ref GameObject useObj,string name)
     {
         useObj = new GameObject { name = $"#{name}" };
         DontDestroyOnLoad(useObj);
     }
+
+    #region Observer Pattern
+    // -- EndGame Observer
+    private List<IEndGameObserver> _endGameObserver = new List<IEndGameObserver>();
+    public void EndGame_AddObserver(IEndGameObserver observer)
+    {
+        _endGameObserver.Add(observer);
+    }
+    public void EndGame_RemoveObserver(IEndGameObserver observer)
+    {
+        _endGameObserver.Remove(observer);
+    }
+    public void EndGame_NoticeObserver()
+    {
+        for(int i = 0; i < _endGameObserver.Count; ++i)
+        {
+            _endGameObserver[i].EndGame_Notice();
+        }
+    }
+    #endregion
 }

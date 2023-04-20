@@ -1,9 +1,9 @@
 using Path;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
-public class PlayerControllerEx : BaseController
+public class PlayerControllerEx : BaseController,IEndGameObserver
 {
     private int playerSkillCount = 1;       // 첫 시작시 기본 스킬 카운트를 1개로 고정
     public int PlayerSkillCount 
@@ -33,12 +33,14 @@ public class PlayerControllerEx : BaseController
 
     protected override void Awake()
     {
+        _anim = GetComponent<Animator>();
         SpreadData();
+        GameManager.Instance.EndGame_AddObserver(this);
+        this.UpdateAsObservable().Subscribe(_ => AnimTumbleSet());
     }
 
     protected override void OnEnable()
     {
-        _anim = GetComponent<Animator>();
         base.OnEnable();
     }
 
@@ -76,11 +78,6 @@ public class PlayerControllerEx : BaseController
 
     }
 
-    private void LateUpdate()  
-    {
-        AnimTumbleSet();
-    }
-
     private void AnimTumbleSet()
     {
         if (_anim.GetBool("TumbleB"))           
@@ -113,10 +110,7 @@ public class PlayerControllerEx : BaseController
         }
     }
 
-    /// <summary>
-    /// 플레이어 사망
-    /// </summary>
-    public void PlayerDead()
+    public void EndGame_Notice()
     {
         GameManager.Sound.Play(ObjSound_P.PlayerDie);
         // 폭발 이펙트

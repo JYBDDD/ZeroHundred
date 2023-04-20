@@ -2,28 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReturnWindow : MonoBehaviour
+public class ReturnWindow : MonoBehaviour,IEndGameObserver
 {
     [SerializeField]
     GameObject returnWindow;
 
-    private bool onBool;
-    private void OnEnable()
+    private void Awake()
     {
-        onBool = false;
+        GameManager.Instance.EndGame_AddObserver(this);
     }
 
-    private void Update()
+    public void EndGame_Notice()
     {
-        OnWindow();
-    }
-
-    private void OnWindow()     // 플레이어 체력이 0일시 한번 실행
-    {
-        if(GameManager.Player.playerController.Stat.Hp <= 0 && onBool == false)
-        {
-            returnWindow.SetActive(true);
-            onBool = true;
-        }
+        returnWindow.SetActive(true);
     }
 }

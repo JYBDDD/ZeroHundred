@@ -31,8 +31,6 @@ public class MissileBase : WeaponBase
             GameManager.Pool.Push(gameObject);
             GameManager.Resource.Instantiate(enemyMissileHitPath, transform.position, Quaternion.Euler(-90, 0, 0), muzzleHitT);
 
-            EnemyMissileC.MissileHitShake = true;
-
             PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
             GameManager.Sound.Play(enemyClips[Random.Range(0, 3)]);
             pEx.Stat.AttackDamage(pEx.Stat, 4);       // BossMissile 데미지 처리

@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Path;
+using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
+    public static CameraShake shakeCam;
+
     public Camera mainCamera;
     Vector3 cameraPos;
 
@@ -14,10 +15,11 @@ public class CameraShake : MonoBehaviour
     [SerializeField, Range(0.1f, 1f)]
     float duration = 0.1f;
     float originDuration = 0.0f;        // 지속시간 기본값
-    float _time = 0;
+    //float _time = 0;
 
     private void Awake()
     {
+        shakeCam = this;
         cameraPos = mainCamera.transform.position;
         originRange = shakeRange;
         originDuration = duration;
@@ -25,39 +27,34 @@ public class CameraShake : MonoBehaviour
         GameManager.Sound.Play(SceneSound_P.GameSceneBGM, Define.Sound.bgm);
     }
 
-    private void FixedUpdate()
+    public void HitPlayer_Shake()
     {
-        if(EnemyBulletC.bulletHitShake == true | EnemyRocketC.RocketHitShake == true | EnemyMissileC.MissileHitShake == true | EnemyBombingAttack.BombingHitShake == true)
-            Shake();
-    }
-
-    public void Shake()
-    {
-        Invoke("StartShake",duration);
+        StartShake();
     }
 
     private void StartShake()
     {
-        if (EnemyBombingAttack.BombingHitShake == true)
+        int rand = UnityEngine.Random.Range(0, 3);
+
+        switch (rand)
         {
-            shakeRange = 0.075f;
-            duration = 0.15f;
+            case 0:
+                shakeRange = 0.075f;
+                duration = 0.15f;
+                break;
+            case 1:
+                shakeRange = 0.07f;
+                duration = 0.14f;
+                break;
+            case 2:
+                shakeRange = 0.065f;
+                duration = 0.13f;
+                break;
+            default:
+                break;
         }
 
-        if (EnemyRocketC.RocketHitShake == true)
-        {
-            shakeRange = 0.07f;
-            duration = 0.14f;
-        }
-
-        if(EnemyMissileC.MissileHitShake == true)
-        {
-            shakeRange = 0.065f;
-            duration = 0.13f;
-        }
-
-
-        _time += Time.deltaTime;
+        //_time += Time.deltaTime;
 
         float cameraPosX = Random.value * shakeRange * 2 - shakeRange;
         float cameraPosY = Random.value * shakeRange * 2 - shakeRange;
@@ -66,25 +63,38 @@ public class CameraShake : MonoBehaviour
         cameraPos.y += cameraPosY;
         mainCamera.transform.position = cameraPos;
 
-        if (_time > duration)
+        //GameManager.AsyncTask.Run(() => StopShake(), duration);
+        /*if (_time > duration)
         {
             StopShake();
             _time = 0;
+        }*/
+        StartCoroutine(CheckCor());
+
+        IEnumerator CheckCor()
+        {
+            float time = 0;
+
+            while(true)
+            {
+                time += Time.deltaTime;
+                if (time > duration)
+                {
+                    StopShake();
+                    yield break;
+                }
+
+                yield return null;
+            }
+
         }
     }
 
     private void StopShake()
     {
         CancelInvoke("StartShake");
-        EnemyBulletC.bulletHitShake = false;
-        EnemyRocketC.RocketHitShake = false;
-        EnemyMissileC.MissileHitShake = false;
-        EnemyBombingAttack.BombingHitShake = false;
         mainCamera.transform.position = cameraPos;
         shakeRange = originRange;
         duration = originDuration;
-
     }
-
-
 }

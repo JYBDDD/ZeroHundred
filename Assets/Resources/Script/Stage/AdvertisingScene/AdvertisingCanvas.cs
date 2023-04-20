@@ -9,7 +9,7 @@ public class AdvertisingCanvas : MonoBehaviour
     private void Update()
     {
         _time += Time.deltaTime;
-        if(_time >= 1f)
+        if(_time >= 1.2f)
         {
             SceneConsole.LoadLogin();
         }
