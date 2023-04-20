@@ -48,7 +48,7 @@ public class WeaponBase : MonoBehaviour
             // 카메라 쉐이크 처리
             if(other.gameObject.CompareTag("Player") && !gameObject.name.Contains("Player"))
             {
-                this.UpdateAsObservable().Subscribe(_ => CameraShake.shakeCam.HitPlayer_Shake());
+                CameraShake.shakeCam.HitPlayer_Shake();
             }
 
             // Hp가 0일경우 실행

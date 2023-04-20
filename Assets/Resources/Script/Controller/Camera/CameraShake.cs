@@ -15,7 +15,7 @@ public class CameraShake : MonoBehaviour
     [SerializeField, Range(0.1f, 1f)]
     float duration = 0.1f;
     float originDuration = 0.0f;        // 지속시간 기본값
-    //float _time = 0;
+    Coroutine _cor = null;
 
     private void Awake()
     {
@@ -29,10 +29,13 @@ public class CameraShake : MonoBehaviour
 
     public void HitPlayer_Shake()
     {
-        StartShake();
+        if (_cor != null)
+            StopCoroutine(_cor);
+
+        StartCoroutine(StartShake());
     }
 
-    private void StartShake()
+    IEnumerator StartShake()
     {
         int rand = UnityEngine.Random.Range(0, 3);
 
@@ -53,9 +56,6 @@ public class CameraShake : MonoBehaviour
             default:
                 break;
         }
-
-        //_time += Time.deltaTime;
-
         float cameraPosX = Random.value * shakeRange * 2 - shakeRange;
         float cameraPosY = Random.value * shakeRange * 2 - shakeRange;
         Vector3 cameraPos = mainCamera.transform.position;
@@ -63,36 +63,25 @@ public class CameraShake : MonoBehaviour
         cameraPos.y += cameraPosY;
         mainCamera.transform.position = cameraPos;
 
-        //GameManager.AsyncTask.Run(() => StopShake(), duration);
-        /*if (_time > duration)
-        {
-            StopShake();
-            _time = 0;
-        }*/
-        StartCoroutine(CheckCor());
+        float time = 0;
 
-        IEnumerator CheckCor()
+        while (true)
         {
-            float time = 0;
-
-            while(true)
+            time += Time.deltaTime;
+            if (time > duration)
             {
-                time += Time.deltaTime;
-                if (time > duration)
-                {
-                    StopShake();
-                    yield break;
-                }
-
-                yield return null;
+                StopShake();
+                yield break;
             }
 
+            yield return null;
         }
     }
 
     private void StopShake()
     {
-        CancelInvoke("StartShake");
+        StopAllCoroutines();
+        _cor = null;
         mainCamera.transform.position = cameraPos;
         shakeRange = originRange;
         duration = originDuration;
