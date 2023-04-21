@@ -23,6 +23,11 @@ public class EnemyRocketC : WeaponBase
         base.Initialize();
     }
 
+    protected override void Inheritance()
+    {
+        base.Inheritance();
+    }
+
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -31,6 +36,7 @@ public class EnemyRocketC : WeaponBase
     private void OnEnable()
     {
         trailRenderer.emitting = false;
+        Inheritance();
     }
 
     private void OnDisable()
@@ -69,8 +75,6 @@ public class EnemyRocketC : WeaponBase
 
     private void Update()
     {
-        WeaponDestroyD();
-
         if (time < 0.1f)
             time += Time.deltaTime;
         if (time > 0.1f && timeBool == false)

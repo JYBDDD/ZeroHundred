@@ -1,6 +1,10 @@
 
 public class Enemy2Controller : EnemyBase
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -13,10 +17,5 @@ public class Enemy2Controller : EnemyBase
     private void OnDisable()
     {
         ObjectList.Remove(gameObject);
-    }
-
-    private void FixedUpdate()
-    {
-        DestroyObject();
     }
 }

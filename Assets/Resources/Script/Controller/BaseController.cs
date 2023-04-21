@@ -2,6 +2,8 @@ using Path;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class BaseController : MonoBehaviour
 {
@@ -19,7 +21,10 @@ public class BaseController : MonoBehaviour
 
     public static List<GameObject> ObjectList = new List<GameObject>();
 
-    protected virtual void Awake() {}
+    protected virtual void Awake() 
+    {
+        DestroyObject_UniRx(this, gameObject);
+    }
 
     protected virtual void OnEnable()
     {
@@ -61,17 +66,12 @@ public class BaseController : MonoBehaviour
     }
 
     /// /// <summary>
-    /// 카메라에서 일정위치 이상 멀어졌을 시 오브젝트 삭제 or 플레이어가 죽었을시 즉시 삭제
+    /// 오브젝트 삭제 (카메라 범위를 벗어났을경우) + 오브젝트 종료시 자동 호출 종료(AddTo)
     /// </summary>
     /// <param name="isSet"></param>
-    protected void DestroyObject()
+    protected void DestroyObject_UniRx<T>(T o,GameObject obj) where T : MonoBehaviour
     {
-        float cameraDistance = (Camera.main.transform.position - transform.position).magnitude;
-
-        if (cameraDistance >= 13f | GameManager.Player.playerController.stat.Hp <= 0)
-        {
-            GameManager.Pool.Push(gameObject);
-        }
+        GameManager.Resource.DestroyObject_UniRx(o, obj);
     }
 
     /// <summary>

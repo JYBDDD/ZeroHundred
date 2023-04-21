@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 public class ResourceManager
@@ -83,6 +85,12 @@ public class ResourceManager
             return clone;
         }
         return null;
+    }
+
+    public void DestroyObject_UniRx<T>(T o, GameObject obj) where T : MonoBehaviour
+    {
+        o.UpdateAsObservable().Where(_ => (Camera.main.transform.position - obj.transform.position).magnitude >= 13f ||
+        GameManager.Player.playerController.Stat.Hp <= 0).Subscribe(_ => GameManager.Pool.Push(obj)).AddTo(o);
     }
 
     /// <summary>

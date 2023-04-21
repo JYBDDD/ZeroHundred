@@ -8,9 +8,15 @@ public class PlayerMissileC : MissileBase
 
     const string playerMisslieShotPath = "Art/Sound/Effect/Player/PlayerMissile/PlayerMissileShot";
 
+    protected override void Inheritance()
+    {
+        base.Inheritance();
+    }
+
     private void OnEnable()
     {
         StartCoroutine(StartMissile());
+        Inheritance();
     }
 
     private void OnDisable()
@@ -24,7 +30,6 @@ public class PlayerMissileC : MissileBase
         {
             transform.forward = Vector3.Lerp(transform.forward, lookVec, 0.1f);
         }
-        WeaponDestroyD();
     }
 
     IEnumerator StartMissile()

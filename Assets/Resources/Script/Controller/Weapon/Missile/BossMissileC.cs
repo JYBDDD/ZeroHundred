@@ -9,15 +9,20 @@ public class BossMissileC : MissileBase
     Vector3 lookVec = Vector3.zero;
     private float waitTime = 0.0f;
 
+    protected override void Inheritance()
+    {
+        base.Inheritance();
+    }
+
     private void OnEnable()
     {
         waitTime = 0;
         speed = 0;
+        Inheritance();
     }
 
     private void FixedUpdate()
     {
-        WeaponDestroyD();
         GuidedMissile();
     }
 

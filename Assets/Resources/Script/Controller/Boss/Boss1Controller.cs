@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
-public class Boss1Controller : EnemyBase
+public class Boss1Controller : EnemyBase,IEndGameObserver
 {
     [SerializeField]
     private GameObject machineGun;
@@ -26,6 +28,16 @@ public class Boss1Controller : EnemyBase
     // FlashBang 설정
     public static bool FlashBangBool = false;
 
+    // -- UniRx 보스 시작 등장 로직
+    IDisposable startLogic;
+
+    protected override void Awake()
+    {
+        GameManager.Instance.EndGame_AddObserver(this);
+        this.UpdateAsObservable().Where(_ => FlashBangBool == false && stat.Hp == specialHpSub).Subscribe(_ => SpecialPattern());
+        startLogic = this.UpdateAsObservable().Where(_ => startTime < 3f).Subscribe(_ => StartMove());
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -41,16 +53,6 @@ public class Boss1Controller : EnemyBase
         BossStatStatic = stat;
     }
 
-    private void Update()
-    {
-        if(GameManager.Player.playerController.Stat.Hp <= 0)        // 플레이어 사망시 삭제
-            GameManager.Pool.Push(gameObject);
-
-        StartMove();
-
-        SpecialPattern();
-    }
-
     private void StartMove()
     {
         startTime += Time.deltaTime;
@@ -63,7 +65,7 @@ public class Boss1Controller : EnemyBase
         BossSpeedAdjust(1.7f, 1, 0.6f);
         BossSpeedAdjust(1.9f, 2, 0.4f);
         BossSpeedAdjust(2.1f, 3, 0.2f);
-        BossSpeedAdjust(2.3f, 4, 0,()=> { StartCoroutine(BossPatternCor()); });
+        BossSpeedAdjust(2.3f, 4, 0,()=> { StartCoroutine(BossPatternCor()); startLogic.Dispose(); });
         #endregion
     }
 
@@ -209,12 +211,9 @@ public class Boss1Controller : EnemyBase
     // 특수 패턴
     private void SpecialPattern()
     {
-        if (FlashBangBool == false && stat.Hp == specialHpSub)        // 체력이 일정량 접근시
-        {
-            GameManager.Sound.Play(ObjSound_P.FlashBang);
-            GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB", transform.position, Quaternion.identity, GameManager.EnemyBulletParent.transform);
-            FlashBangBool = true;
-        }
+        GameManager.Sound.Play(ObjSound_P.FlashBang);
+        GameManager.Resource.Instantiate("Weapon/FlashBang/FlashB", transform.position, Quaternion.identity, GameManager.EnemyBulletParent.transform);
+        FlashBangBool = true;
     }
 
     public void BossDead()
@@ -258,5 +257,10 @@ public class Boss1Controller : EnemyBase
             GameManager.Sound.Play(ObjSound_P.BossRocketShot);
             fanShotSoundBool = true;
         }
+    }
+
+    public void EndGame_Notice()
+    {
+        GameManager.Pool.Push(gameObject);
     }
 }

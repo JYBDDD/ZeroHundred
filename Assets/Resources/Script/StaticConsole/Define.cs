@@ -18,15 +18,6 @@ public class Define
         Player,
         Boss,
     }
-
-    public enum Weapon
-    {
-        None,
-        Bullet,
-        Missile,
-        Rocket,
-        Max,
-    }
 }
 
 namespace Path

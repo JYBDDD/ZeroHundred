@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class EnemyBase : BaseController
 {
-    Define.Weapon[] _weapons = new Define.Weapon[(int)Define.Weapon.Max];
-
     protected float lookVec = 0.0f;
     protected Quaternion lookQut = Quaternion.identity;
 

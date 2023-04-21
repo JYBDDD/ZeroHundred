@@ -1,10 +1,17 @@
 using Path;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class EnemyBombingAttack : WeaponBase
 {
     private bool isbool;
     private float time = 0;
+
+    private void Awake()
+    {
+        this.UpdateAsObservable().Where(_ => time < 0.11f).Subscribe(_=> HitCheck());
+    }
 
     protected override void Initialize()
     {
@@ -18,12 +25,12 @@ public class EnemyBombingAttack : WeaponBase
         Initialize();
     }
 
-    private void Update()
+    private void HitCheck()
     {
         if (isbool == true)
             time += Time.deltaTime;
 
-        if(time > 0.1f)         // OnEnable 되었을때 0.1초까지만 타격 판정
+        if (time > 0.1f)         // OnEnable 되었을때 0.1초까지만 타격 판정
             isbool = false;
     }
 

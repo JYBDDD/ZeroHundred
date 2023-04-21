@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class PlayerSkillC : BaseController
 {
-    private void Update()
+    protected override void Awake()
     {
-        DestroyObject();
+        base.Awake();
     }
 }

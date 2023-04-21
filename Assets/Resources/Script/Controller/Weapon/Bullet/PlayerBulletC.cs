@@ -22,6 +22,16 @@ public class PlayerBulletC : WeaponBase
         AddHitAction(() => { GameManager.Resource.Instantiate(bulletHitPath, transform.position, Quaternion.identity, muzzleHitT); });
     }
 
+    protected override void Inheritance()
+    {
+        base.Inheritance();
+    }
+
+    private void OnEnable()
+    {
+        Inheritance();
+    }
+
     private void OnDisable()
     {
         trailRenderer.emitting = false;
@@ -58,8 +68,6 @@ public class PlayerBulletC : WeaponBase
 
     private void Update()
     {
-        WeaponDestroyD();
-
         if (time < 0.1f)
             time += Time.deltaTime;
         if (time > 0.1f && timeBool == false)

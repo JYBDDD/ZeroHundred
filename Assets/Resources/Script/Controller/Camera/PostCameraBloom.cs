@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UniRx;
+using UniRx.Triggers;
 
 public class PostCameraBloom : MonoBehaviour        // PostProcessing (Bloom)전용 카메라 스크립트
 {
@@ -13,11 +15,7 @@ public class PostCameraBloom : MonoBehaviour        // PostProcessing (Bloom)전�
     private void Awake()
     {
         b_Volume = GetComponent<PostProcessVolume>();
-    }
-
-    private void Update()
-    {
-        BloomUpdate();
+        this.LateUpdateAsObservable().Subscribe(_=> BloomUpdate());
     }
 
     #region FlashBang 전용

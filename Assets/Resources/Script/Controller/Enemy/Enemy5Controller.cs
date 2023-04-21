@@ -7,6 +7,11 @@ public class Enemy5Controller : EnemyBase
     [SerializeField]
     private StageData stageData;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -23,11 +28,6 @@ public class Enemy5Controller : EnemyBase
     {
         ObjectList.Remove(gameObject);
         StopCoroutine(BombWarning());
-    }
-
-    private void FixedUpdate()
-    {
-        DestroyObject();
     }
 
     IEnumerator BombWarning()

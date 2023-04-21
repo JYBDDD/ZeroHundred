@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class EnemyBulletC : WeaponBase
 {
-    public static bool bulletHitShake = false;  // 카메라 쉐이크(Projectile)
-
     [SerializeField]
     private TrailRenderer trailRenderer;
     private float time = 0;
@@ -53,8 +51,6 @@ public class EnemyBulletC : WeaponBase
             GameManager.Pool.Push(gameObject);
             HitActionInvoke();
 
-            bulletHitShake = true;
-
             GameManager.Sound.Play(audioClips[UnityEngine.Random.Range(0, 4)]);
             PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
             pEx.Stat.AttackDamage(pEx.Stat, 1);       // EnemyProjectile 데미지 처리
@@ -69,8 +65,6 @@ public class EnemyBulletC : WeaponBase
 
     private void Update()
     {
-        WeaponDestroyD();
-
         if (time < 0.1f)
             time += Time.deltaTime;
         if (time > 0.1f && timeBool == false)

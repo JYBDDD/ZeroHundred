@@ -9,16 +9,21 @@ public class EnemyMissileC : MissileBase
     Vector3 lookVec = Vector3.zero;
     private float waitTime = 0.0f;
 
+    protected override void Inheritance()
+    {
+        base.Inheritance();
+    }
+
     private void OnEnable()
     {
         waitTime = 0;
         speed = 0;
         GameManager.Sound.Play(ObjSound_P.EnemyMisslieShot);
+        Inheritance();
     }
 
     private void FixedUpdate()
     {
-        WeaponDestroyD();
         GuidedMissile();
     }
 
