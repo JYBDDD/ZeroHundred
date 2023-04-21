@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
-public class EnemyRocketC : WeaponBase
+public class EnemyRocketC : WeaponBase,IWeaponTrail
 {
     [SerializeField]
     private TrailRenderer trailRenderer;
@@ -23,11 +25,6 @@ public class EnemyRocketC : WeaponBase
         base.Initialize();
     }
 
-    protected override void Inheritance()
-    {
-        base.Inheritance();
-    }
-
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -37,6 +34,7 @@ public class EnemyRocketC : WeaponBase
     {
         trailRenderer.emitting = false;
         Inheritance();
+        WeaponTrail_UniRx();
     }
 
     private void OnDisable()
@@ -73,14 +71,18 @@ public class EnemyRocketC : WeaponBase
         }
     }
 
-    private void Update()
+    public void WeaponTrail_UpdateNecessary()
     {
-        if (time < 0.1f)
-            time += Time.deltaTime;
-        if (time > 0.1f && timeBool == false)
+        time += Time.deltaTime;
+        if (time > 0.1f)
         {
             trailRenderer.emitting = true;
             timeBool = true;
         }
+    }
+
+    public void WeaponTrail_UniRx()
+    {
+        this.UpdateAsObservable().Where(_ => timeBool == false).Subscribe(_ => WeaponTrail_UpdateNecessary());
     }
 }

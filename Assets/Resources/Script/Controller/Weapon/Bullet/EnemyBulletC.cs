@@ -1,6 +1,8 @@
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
-public class EnemyBulletC : WeaponBase
+public class EnemyBulletC : WeaponBase,IWeaponTrail
 {
     [SerializeField]
     private TrailRenderer trailRenderer;
@@ -21,11 +23,13 @@ public class EnemyBulletC : WeaponBase
         base.Initialize();
         audioClips = Resources.LoadAll<AudioClip>(projectileHitPath);
         AddHitAction(() => { GameManager.Resource.Instantiate("Weapon/Bullet/PlayerHit", transform.position, Quaternion.identity, muzzleHitT); });
+        rigid = GetComponent<Rigidbody>();
+        WeaponTrail_UniRx();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        rigid = GetComponent<Rigidbody>();
+        Inheritance();
     }
 
     private void OnDisable()
@@ -63,15 +67,18 @@ public class EnemyBulletC : WeaponBase
         }
     }
 
-    private void Update()
+    public void WeaponTrail_UpdateNecessary()
     {
-        if (time < 0.1f)
-            time += Time.deltaTime;
-        if (time > 0.1f && timeBool == false)
+        time += Time.deltaTime;
+        if(time > 0.1f)
         {
             trailRenderer.emitting = true;
             timeBool = true;
         }
     }
-    
+
+    public void WeaponTrail_UniRx()
+    {
+        this.UpdateAsObservable().Where(_ => timeBool == false).Subscribe(_ => WeaponTrail_UpdateNecessary());
+    }
 }

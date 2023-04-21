@@ -1,6 +1,4 @@
 using System;
-using UniRx.Triggers;
-using UniRx;
 using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
@@ -18,7 +16,7 @@ public class WeaponBase : MonoBehaviour
         bulletHitPath = "Weapon/Bullet/BulletHit";
     }
 
-    protected virtual void Inheritance()
+    protected void Inheritance()
     {
         GameManager.Resource.DestroyObject_UniRx(this, gameObject);
     }

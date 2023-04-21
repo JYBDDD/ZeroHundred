@@ -8,8 +8,10 @@ public class MissileSpawner : WeaponSpawnerBase
     public static int ShootCount = 1;           // Projectile 발사 갯수   (MissileItemC 에서 사용중)
     int count = 0;
 
-    public static bool ActiveBool = false;      // MissileItemC 에서 SetActive 호출용으로 사용중
-    private int activeCount = 0;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
+    //public static bool ActiveBool = false;      // MissileItemC 에서 SetActive 호출용으로 사용중
+    //private int activeCount = 0;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
+    public static bool ActiveBool = true;      // MissileItemC 에서 SetActive 호출용으로 사용중
+    private int activeCount = 1;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
 
     protected override void Awake()
     {
@@ -49,7 +51,7 @@ public class MissileSpawner : WeaponSpawnerBase
         {
             GameManager.Sound.Play(clipPath);
             GameManager.Resource.Instantiate(muzzlePath, transform.position, lookQut , muzzleH_P);
-            GameManager.Resource.Instantiate(projectilePath, transform.position, identity, enemyB_P);
+            GameManager.Resource.Instantiate(projectilePath, transform.position, identity, playerB_P);
 
             yield return new WaitForSeconds(0.2f);
             count++;

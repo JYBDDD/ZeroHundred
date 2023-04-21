@@ -28,13 +28,15 @@ public class WarningMark : MonoBehaviour        // EnemyBombingC 와 폭발 타이밍 
         spriteRenderer.enabled = true;
         isbool = true;
         transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-        
     }
 
     private void Update()
     {
-        if(!isbool)
+        if (!isbool)
+        {
             MarkGrowUpSize();
+            return;
+        }
         MarkShrinkSize();
     }
 
@@ -44,7 +46,7 @@ public class WarningMark : MonoBehaviour        // EnemyBombingC 와 폭발 타이밍 
         {
             transform.localScale = Vector3.Slerp(transform.localScale, minSizeMark, Time.deltaTime * 10f);
 
-            if(transform.localScale.magnitude <= minusValue.magnitude)
+            if (transform.localScale.magnitude <= minusValue.magnitude)
                 isbool = false;
         }
     }

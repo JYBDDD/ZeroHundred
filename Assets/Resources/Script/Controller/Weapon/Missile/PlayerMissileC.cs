@@ -1,6 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class PlayerMissileC : MissileBase
 {
@@ -8,9 +9,9 @@ public class PlayerMissileC : MissileBase
 
     const string playerMisslieShotPath = "Art/Sound/Effect/Player/PlayerMissile/PlayerMissileShot";
 
-    protected override void Inheritance()
+    private void Start()
     {
-        base.Inheritance();
+        this.UpdateAsObservable().Where(_ => BaseController.ObjectList.Count > 0).Subscribe(_ => LookAtMissile());
     }
 
     private void OnEnable()
@@ -24,12 +25,9 @@ public class PlayerMissileC : MissileBase
         StopAllCoroutines();
     }
 
-    private void Update()
+    private void LookAtMissile()
     {
-        if (BaseController.ObjectList.Count > 0)
-        {
-            transform.forward = Vector3.Lerp(transform.forward, lookVec, 0.1f);
-        }
+        transform.forward = Vector3.Lerp(transform.forward, lookVec, 0.1f);
     }
 
     IEnumerator StartMissile()

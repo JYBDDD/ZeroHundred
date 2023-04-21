@@ -18,7 +18,7 @@ public class PoolManager : IManager
 
         try
         {
-            var firstCheck = poolList.Where(_ => _.name.Contains(objectName));
+            var firstCheck = poolList.Where(_ => _.name.Equals(objectName));
 
             if (firstCheck.Count() <= 0)
                 return null;

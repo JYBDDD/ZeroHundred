@@ -10,7 +10,7 @@ public class SkillBulletSpawner : WeaponSpawnerBase
 
         clipPath = "Art/Sound/Effect/Player/PlayerProjectile/PlayerProjectileShot";
         projectilePath = "Weapon/Bullet/PlayerProjectile";
-        shootRange = 0.5f;
+        shootRange = 0.2f;
     }
 
     private void OnEnable()

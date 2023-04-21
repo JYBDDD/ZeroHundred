@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
-public class PlayerBulletC : WeaponBase
+public class PlayerBulletC : WeaponBase,IWeaponTrail
 {
     [SerializeField]
     private TrailRenderer trailRenderer;
@@ -20,11 +22,7 @@ public class PlayerBulletC : WeaponBase
     {
         base.Initialize();
         AddHitAction(() => { GameManager.Resource.Instantiate(bulletHitPath, transform.position, Quaternion.identity, muzzleHitT); });
-    }
-
-    protected override void Inheritance()
-    {
-        base.Inheritance();
+        WeaponTrail_UniRx();
     }
 
     private void OnEnable()
@@ -66,14 +64,18 @@ public class PlayerBulletC : WeaponBase
         }
     }
 
-    private void Update()
+    public void WeaponTrail_UpdateNecessary()
     {
-        if (time < 0.1f)
-            time += Time.deltaTime;
-        if (time > 0.1f && timeBool == false)
+        time += Time.deltaTime;
+        if (time > 0.1f)
         {
             trailRenderer.emitting = true;
             timeBool = true;
         }
+    }
+
+    public void WeaponTrail_UniRx()
+    {
+        this.UpdateAsObservable().Where(_ => timeBool == false).Subscribe(_ => WeaponTrail_UpdateNecessary());
     }
 }
