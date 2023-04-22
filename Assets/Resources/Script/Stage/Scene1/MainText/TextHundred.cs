@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 
 public class TextHundred : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class TextHundred : MonoBehaviour
     private void Awake()
     {
         text = GetComponent<Text>();
+        this.UpdateAsObservable().Subscribe(_ => TextUpdate());
     }
 
     private void Start()
@@ -25,7 +26,7 @@ public class TextHundred : MonoBehaviour
         isBool = false;
     }
 
-    private void Update()
+    private void TextUpdate()
     {
         time += Time.deltaTime;
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class Movement2D : MonoBehaviour
 {
@@ -9,7 +11,12 @@ public class Movement2D : MonoBehaviour
     [SerializeField]
     private Vector3 moveDirection = Vector3.zero;
 
-    private void Update()
+    private void Awake()
+    {
+        this.UpdateAsObservable().Subscribe(_ => MoveDirectUpdate());
+    }
+
+    private void MoveDirectUpdate()
     {
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }

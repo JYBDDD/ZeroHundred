@@ -46,6 +46,8 @@ public class EnemyBulletC : WeaponBase,IWeaponTrail
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+
+        PlayerGuard(other);
     }
 
     protected override void DamageProcess(Collider other)
@@ -58,12 +60,6 @@ public class EnemyBulletC : WeaponBase,IWeaponTrail
             GameManager.Sound.Play(audioClips[UnityEngine.Random.Range(0, 4)]);
             PlayerControllerEx pEx = other.GetComponent<PlayerControllerEx>();
             pEx.Stat.AttackDamage(pEx.Stat, 1);       // EnemyProjectile 데미지 처리
-        }
-
-        if (other.gameObject.CompareTag("PlayerGuard"))     // 플레이어 스킬에 막히도록 설정
-        {
-            GameManager.Pool.Push(gameObject);
-            HitActionInvoke();
         }
     }
 

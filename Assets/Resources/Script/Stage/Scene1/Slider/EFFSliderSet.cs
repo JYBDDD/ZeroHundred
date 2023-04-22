@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 
 public class EFFSliderSet : MonoBehaviour
 {
@@ -17,13 +17,12 @@ public class EFFSliderSet : MonoBehaviour
         slider = GetComponent<Slider>();
         slider.value = SoundManager.EffSliderPitch;
         effAudioSource = GameManager.SoundP.transform.GetChild(1).GetComponent<AudioSource>();
+        this.UpdateAsObservable().Where(_ => originVal != currentVal).Subscribe(_ => EffSliderSetting());
     }
 
     private void Update()
     {
         originVal = slider.value;
-        if (originVal != currentVal)
-            EffSliderSetting();
     }
 
     private void EffSliderSetting()

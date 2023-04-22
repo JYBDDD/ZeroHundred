@@ -35,7 +35,11 @@ public class MissileBase : WeaponBase
             GameManager.Sound.Play(enemyClips[Random.Range(0, 3)]);
             pEx.Stat.AttackDamage(pEx.Stat, 4);       // BossMissile 데미지 처리
         }
-        if (t.CompareTag("PlayerProjectile") || t.CompareTag("Missile"))      // 유도미사일은 플레이어가 발사하는 Projectile이 삭제되지 않고 계속 유지됨
+    }
+
+    protected void EnemyMissileDestroy(Collider other)
+    {
+        if (other.CompareTag("PlayerProjectile") || other.CompareTag("Missile"))      // 유도미사일은 플레이어가 발사하는 Projectile이 삭제되지 않고 계속 유지됨
         {
             GameManager.Pool.Push(gameObject);
             GameManager.Resource.Instantiate(enemyMissileHitPath, transform.position, Quaternion.identity, muzzleHitT);
@@ -60,11 +64,5 @@ public class MissileBase : WeaponBase
             checkBase.animBool = true;
             checkBase.StateHit_Enemy(other.gameObject.name);
         }
-        if (obj.CompareTag("EnemyWeaponD"))        // 파괴가능한 오브젝트에 맞을시 삭제
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate(missileHitPath, transform.position, Quaternion.identity, muzzleHitT);
-        }
-
     }
 }

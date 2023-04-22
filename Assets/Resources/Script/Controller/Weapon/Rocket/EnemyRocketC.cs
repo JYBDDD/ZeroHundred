@@ -49,6 +49,15 @@ public class EnemyRocketC : WeaponBase,IWeaponTrail
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+
+        if (other.CompareTag("PlayerProjectile") || other.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
+        {
+            GameManager.Pool.Push(gameObject);
+            GameManager.Resource.Instantiate(roketHitPath, transform.position, Quaternion.identity, muzzleHitT);
+            GameManager.Sound.Play(roketHitSoundPath);
+        }
+
+        PlayerGuard(other);
     }
 
     protected override void DamageProcess(Collider other)
@@ -61,13 +70,6 @@ public class EnemyRocketC : WeaponBase,IWeaponTrail
 
             GameManager.Sound.Play(roketHitSoundPath);
             GameManager.Player.playerController.Stat.AttackDamage(obj.GetComponent<PlayerControllerEx>().Stat, 10);        // 로켓 데미지 처리
-        }
-
-        if (obj.CompareTag("PlayerProjectile") || obj.CompareTag("Missile")) // 플레이어 projectile , Missile 에 맞았을시 삭제
-        {
-            GameManager.Pool.Push(gameObject);
-            GameManager.Resource.Instantiate(roketHitPath, transform.position, Quaternion.identity, muzzleHitT);
-            GameManager.Sound.Play(roketHitSoundPath);
         }
     }
 

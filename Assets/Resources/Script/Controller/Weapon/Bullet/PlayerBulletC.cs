@@ -40,6 +40,11 @@ public class PlayerBulletC : WeaponBase,IWeaponTrail
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+
+        if (other.gameObject.CompareTag("EnemyWeaponD"))            // 파괴가능한 오브젝트에 맞을시 삭제
+        {
+            HitActionInvoke();
+        }
     }
 
     protected override void DamageProcess(Collider other)
@@ -55,12 +60,6 @@ public class PlayerBulletC : WeaponBase,IWeaponTrail
 
             checkBase.animBool = true;
             checkBase.StateHit_Enemy(other.gameObject.name);
-        }
-
-        if (other.gameObject.CompareTag("EnemyWeaponD"))            // 파괴가능한 오브젝트에 맞을시 삭제
-        {
-            GameManager.Pool.Push(gameObject);
-            HitActionInvoke();
         }
     }
 

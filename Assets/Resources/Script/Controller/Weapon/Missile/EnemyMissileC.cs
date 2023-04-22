@@ -57,6 +57,10 @@ public class EnemyMissileC : MissileBase
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+
+        EnemyMissileDestroy(other);
+
+        PlayerGuard(other);
     }
 
     protected override void DamageProcess(Collider other)

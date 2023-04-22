@@ -15,8 +15,6 @@ public class Boss1Controller : EnemyBase,IEndGameObserver
     [SerializeField]
     private int specialHpSub;
 
-    public static Stat BossStatStatic;
-
     // StartMove »ç¿ëÁß
     float startTime = 0;
     int startCount = 0;
@@ -49,8 +47,6 @@ public class Boss1Controller : EnemyBase,IEndGameObserver
 
         machineGun.SetActive(false);
         missileLauncher.SetActive(false);
-
-        BossStatStatic = stat;
     }
 
     private void StartMove()

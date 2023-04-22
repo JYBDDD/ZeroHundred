@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class MissileSpawner : WeaponSpawnerBase
 {
@@ -8,10 +10,8 @@ public class MissileSpawner : WeaponSpawnerBase
     public static int ShootCount = 1;           // Projectile 발사 갯수   (MissileItemC 에서 사용중)
     int count = 0;
 
-    //public static bool ActiveBool = false;      // MissileItemC 에서 SetActive 호출용으로 사용중
-    //private int activeCount = 0;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
-    public static bool ActiveBool = true;      // MissileItemC 에서 SetActive 호출용으로 사용중
-    private int activeCount = 1;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
+    public static bool ActiveBool = false;      // MissileItemC 에서 SetActive 호출용으로 사용중
+    private int activeCount = 0;                // Count가 1 이하일시 한번만 호출 시키도록 함 (Update)
 
     protected override void Awake()
     {
@@ -21,6 +21,8 @@ public class MissileSpawner : WeaponSpawnerBase
         muzzlePath = "Weapon/Bullet/Muzzle";
         projectilePath = "Weapon/Missile/MissileAttack";
         lookQut = Quaternion.Euler(90, 0, 0);
+
+        this.UpdateAsObservable().Where(_ => ActiveBool == true && activeCount < 1).Subscribe(_ => MissileOn());
     }
 
     private void OnEnable()
@@ -34,13 +36,10 @@ public class MissileSpawner : WeaponSpawnerBase
         StopCoroutine(ShootRoutin());
     }
 
-    public void Update()
+    private void MissileOn()
     {
-        if(ActiveBool == true && activeCount < 1)
-        {
-            activeCount++;
-            StartCoroutine(ShootRoutin());
-        }
+        activeCount++;
+        StartCoroutine(ShootRoutin());
     }
 
     IEnumerator ShootRoutin()

@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 
 public class BGMSliderSet : MonoBehaviour
 {
@@ -17,13 +17,13 @@ public class BGMSliderSet : MonoBehaviour
         slider = GetComponent<Slider>();
         slider.value = SoundManager.BGMSliderPitch;
         bgmAudioSource = GameManager.SoundP.transform.GetChild(0).GetComponent<AudioSource>();
+
+        this.UpdateAsObservable().Where(_=> originVal != currentVal).Subscribe(_ => EffSliderSetting());
     }
 
     private void Update()
     {
         originVal = slider.value;
-        if (originVal != currentVal)
-            EffSliderSetting();
     }
 
     private void EffSliderSetting()

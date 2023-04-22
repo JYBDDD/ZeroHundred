@@ -29,6 +29,8 @@ public class WeaponBase : MonoBehaviour
 
     protected void HitActionInvoke()
     {
+        if (hitAction == null)
+            return;
         hitAction.Invoke();
     }
 
@@ -93,4 +95,14 @@ public class WeaponBase : MonoBehaviour
         else
             return false;
     }
+
+    protected void PlayerGuard(Collider other)
+    {
+        if (other.gameObject.CompareTag("PlayerGuard"))     // 플레이어 스킬에 막히도록 설정
+        {
+            GameManager.Pool.Push(gameObject);
+            HitActionInvoke();
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class ItemBase : MonoBehaviour
 {
@@ -18,24 +20,25 @@ public class ItemBase : MonoBehaviour
     protected float _time = 0;
 
 
-    protected virtual void Awake()
+    protected  void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         DestroyClip = GetComponent<Animation>();
+        this.UpdateAsObservable().Subscribe(_ => DestroyCheck());
     }
 
-    protected virtual void OnEnable()
+    protected void OnEnable()
     {
         rigid.velocity = new Vector3(Random.Range(-2f, 2f), Random.Range(-2f, 2f));
         DestroyClip.enabled = false;
     }
 
-    protected virtual void OnDisable()
+    protected void OnDisable()
     {
         rigid.velocity = new Vector3(0, 0, 0);
     }
 
-    protected virtual void Update()
+    private void DestroyCheck()
     {
         ItemDestroy();
         if (_time > 7f && ClipBool == false)

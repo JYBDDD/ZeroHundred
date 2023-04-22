@@ -4,23 +4,9 @@ using UnityEngine;
 
 public class PublicWeaponEffectC : EffectBaseC
 {
-    protected float pushTime = 2f;
-
-    private void Update()
+    protected override void Awake()
     {
-        if (gameObject.activeSelf)
-        {
-            _time += Time.deltaTime;
-            if (_time > pushTime)
-            {
-                PushBack();
-                _time = 0;
-            }
-        }
-    }
-
-    private void PushBack()
-    {
-        GameManager.Pool.Push(gameObject);
+        _pushTime = 2f;
+        base.Awake();
     }
 }
