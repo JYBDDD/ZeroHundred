@@ -63,13 +63,10 @@ public class PlayerMissileC : MissileBase
                 transform.rotation = Quaternion.Euler(-90, 0, 0);
             }
 
-            for (int i = 0; i < BaseController.ObjectList.Count; i++)
-            {
-                int randNum = Random.Range(0, BaseController.ObjectList.Count);     // 랜덤으로 적을 향해 발사
-                lookVec = (BaseController.ObjectList[randNum].transform.position - transform.position).normalized;       // 적 위치 값
+            int randNum = Random.Range(0, BaseController.ObjectList.Count);     // 랜덤으로 적을 향해 발사
+            lookVec = (BaseController.ObjectList[randNum].transform.position - transform.position).normalized;       // 적 위치 값
 
-                m2D.MoveDirection(new Vector3(lookVec.x * 10f, lookVec.y * 10f));         // 이동 방향 결정
-            }
+            m2D.MoveDirection(new Vector3(lookVec.x * 10f, lookVec.y * 10f));         // 이동 방향 결정
 
         }
     }

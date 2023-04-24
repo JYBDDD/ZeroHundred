@@ -65,8 +65,7 @@ public class ItemBase : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
-        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
+        transform.position = new Vector2(ClampX(),ClampY());
         if (other.gameObject.CompareTag("ItemLimit"))
         {
             Vector3 dir = transform.position - other.transform.position;        // RigidBody - Freeze Position 으로 z값 잠금
@@ -76,9 +75,7 @@ public class ItemBase : MonoBehaviour
 
     protected virtual void OnTriggerStay(Collider other)
     {
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
-        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
-
+        transform.position = new Vector2(ClampX(), ClampY());
         if (other.gameObject.CompareTag("ItemLimit"))
         {
             rigid.velocity = new Vector3(0, 0);
@@ -89,7 +86,16 @@ public class ItemBase : MonoBehaviour
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x),
-        Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y));
+        transform.position = new Vector2(ClampX(), ClampY());
+    }
+
+    private float ClampX()
+    {
+        return Mathf.Clamp(transform.position.x, stageData.LimitMin.x, stageData.LimitMax.x);
+    }
+
+    private float ClampY()
+    {
+        return Mathf.Clamp(transform.position.y, stageData.LimitMin.y, stageData.LimitMax.y);
     }
 }

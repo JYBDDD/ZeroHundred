@@ -198,7 +198,7 @@ public class Boss1Controller : EnemyBase,IEndGameObserver
         if(stat.Hp > 0 && gameObject.activeSelf)
         {
             Vector2 dirvec = new Vector2(UnityEngine.Random.Range(-2.6f, 2.6f), UnityEngine.Random.Range(-4.6f, 2.5f));
-            GameObject bullet = GameManager.Resource.Instantiate("Weapon/Bombing/Bombing", dirvec, Quaternion.identity, GameManager.EnemyBulletParent.transform);
+            GameManager.Resource.Instantiate("Weapon/Bombing/Bombing", dirvec, Quaternion.identity, GameManager.EnemyBulletParent.transform);
         }
         if (time < 8.5f && stat.Hp > 0 && gameObject.activeSelf)
             Invoke("AirMine", 0.25f);

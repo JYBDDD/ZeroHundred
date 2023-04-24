@@ -24,7 +24,7 @@ public class EnemyBase : BaseController
         {
             float randRange = Random.Range(min, max);
             yield return new WaitForSeconds(randRange);                                  // 일정 시간 대기
-            gameObject.GetComponent<Movement2D>().MoveDirection(new Vector3(0, 0, 0));     // 이동 정지 
+            gameObject.GetComponent<Movement2D>().MoveDirection(Vector3.zero);     // 이동 정지 
 
             yield return new WaitForSeconds(2f);                                         // 2초후 사용 정지
             isbool = false;
