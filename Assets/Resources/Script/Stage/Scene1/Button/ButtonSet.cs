@@ -9,7 +9,7 @@ public class ButtonSet : MonoBehaviour
     {
         GameManager.Pool.Clear();
         GameManager.Sound.Clear();
-        SceneConsole.LoadGame();
+        SceneConsole.Instance.LoadGame();
     }
 
     [SerializeField]

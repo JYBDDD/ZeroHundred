@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class AdvertisingCanvas : MonoBehaviour
 {
-    float _time = 0;
+    float _time = 1.2f;
 
-    private void Update()
+    private void OnEnable()
     {
-        _time += Time.deltaTime;
-        if(_time >= 1.2f)
-        {
-            SceneConsole.LoadLogin();
-        }
+        TaskManager.Instance.TaskDelayAction(_time, () => { SceneConsole.Instance.LoadLogin(); }).Forget();
     }
 }

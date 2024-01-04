@@ -6,6 +6,6 @@ public class QuitTouchToScreen : MonoBehaviour
 {
     public void QuitToLobby()
     {
-        SceneConsole.LoadLobby();
+        SceneConsole.Instance.LoadLobby();
     }
 }

@@ -21,7 +21,7 @@ public class BackendMain
 
         if(result.IsSuccess())
         {
-            SceneConsole.LoadLobby();
+            SceneConsole.Instance.LoadLobby();
             GameManager.Sound.Play(UI_P.UISuccess);
         }
         else

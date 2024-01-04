@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     SoundManager _sound = new SoundManager();
     BackendMain _backend = new BackendMain();
     GoogleManager _google = new GoogleManager();
-    AsyncTask _task = new AsyncTask();
 
     public static PlayerManager Player { get => Instance._player; }
     public static ResourceManager Resource { get => Instance._resource; }
@@ -29,7 +28,6 @@ public class GameManager : MonoBehaviour
     public static SoundManager Sound { get => Instance._sound; }
     public static BackendMain BackendMain { get => Instance._backend; }
     public static GoogleManager GoogleM { get => Instance._google; }
-    public static AsyncTask AsyncTask { get => Instance._task; }
 
     // Player
     public static GameObject PlayerBulletParent;    // Player Weapon ºÎ¸ð
