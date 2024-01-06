@@ -11,6 +11,6 @@ public class HashCodeField : MonoBehaviour
 
     public void GetGoogleThisHashColde()
     {
-        GameManager.BackendMain.GetGoogleHashCode(input);
+        GameManager.NetworkMain.GetGoogleHashCode(input);
     }
 }

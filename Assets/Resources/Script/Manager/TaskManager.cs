@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 
 public class TaskManager : MonoSingleton<TaskManager>
 {
@@ -54,7 +53,4 @@ public class TaskManager : MonoSingleton<TaskManager>
         source.Cancel();
         source.Dispose();
     }
-    
-
-
 }

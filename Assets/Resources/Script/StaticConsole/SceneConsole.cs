@@ -7,6 +7,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine.UI;
+using Path;
 
 public class SceneConsole : MonoSingleton<SceneConsole>
 {
@@ -15,7 +16,7 @@ public class SceneConsole : MonoSingleton<SceneConsole>
     public void LoadScene(string name)
     {
         InitGroup();
-
+        GameManager.Sound.Play(UI_P.UISuccess);
         AsyncSceneLoad_FadeInOut(name).Forget();
     }
 
@@ -69,8 +70,10 @@ public class SceneConsole : MonoSingleton<SceneConsole>
         op.allowSceneActivation = false;
 
         await UniTask.WaitUntil(() => op.isDone == false);
+        await UniTask.DelayFrame(5, PlayerLoopTiming.Update, tokenS.Token);
 
         op.allowSceneActivation = true;
+
 
         // Fade Out
         while (_group.alpha > 0)

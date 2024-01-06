@@ -5,30 +5,29 @@ using BackEnd;
 using UnityEngine.UI;
 using Path;
 using SceneN;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using System.Threading;
 
-public class BackendMain
+public class NetworkMain : MonoNetwork
 {
+    #region Backend
     string rankuuid = "779da490-565d-11ec-a8be-750fdbf90167";       // 랭킹테이블 uuid 값
 
     public void BackendCallSetting()             // 게임 첫 스타트시 반드시 호출되야하는 메소드 (LoginSceneButton 에서 호출중)
     {
         Backend.Initialize(true);
+        GooglePlatformSet();
     }
 
     public void SignInLogin(string id,string password)      // 로그인
     {
         var result = Backend.BMember.CustomLogin(id, password);
 
-        if(result.IsSuccess())
-        {
+        if (result.IsSuccess())
             SceneConsole.Instance.LoadLobby();
-            GameManager.Sound.Play(UI_P.UISuccess);
-        }
         else
-        {
-            LoginSceneButton.GUILoginErrorBool = true;
-            GameManager.Sound.Play(UI_P.UIFail);
-        }
+            SetCallLogMessage(IMessage.IDPW_Fail);
     }
 
     // 회원 가입
@@ -42,29 +41,21 @@ public class BackendMain
             if (bro.IsSuccess())
             {
                 Backend.BMember.UpdateNickname(nickName);
-                LoginSceneButton.GUICreateSuccessBool = true;
-                GameManager.Sound.Play(UI_P.UISuccess);
+                SetCallLogMessage(IMessage.C_Create);
 
                 // 아이디 생성시 사용할 값 미리 적용 (오류 방지)
-                Param param = new Param();                  
+                Param param = new Param();
                 param.Add("UserName", GetNick());
                 param.Add("Score", GameManager.SCORE);
 
                 // 새로운값 Insert
-                Backend.GameData.Insert("UserInfo", param);                                  
+                Backend.GameData.Insert("UserInfo", param);
             }
             else
-            {
-                LoginSceneButton.GUICreateErrorBool = true;
-                GameManager.Sound.Play(UI_P.UIFail);
-            }
+                SetCallLogMessage(IMessage.ID_Duplicated);
         }
         else
-        {
-            LoginSceneButton.GUICreateBlankBool = true;
-            GameManager.Sound.Play(UI_P.UIFail);
-        }
-
+            SetCallLogMessage(IMessage.ID_Blank);
     }
 
     private bool NicknameRestrictions(string name)          // 닉네임 11글자 초과 방지
@@ -72,7 +63,7 @@ public class BackendMain
         int stringNum = name.Length;
         if(stringNum > 12)
         {
-            LoginSceneButton.GUICreateNickBool = true;
+            SetCallLogMessage(IMessage.Nick_ExcessFail);
             return false;
         }
         return true;
@@ -193,10 +184,88 @@ public class BackendMain
 
         Backend.BMember.UpdateNickname(Social.localUser.userName);    // 구글 아이디 = 게임 닉네임
 
-        param.Add("UserName", GameManager.BackendMain.GetNick());
+        param.Add("UserName", GameManager.NetworkMain.GetNick());
         param.Add("Score", GameManager.SCORE);
 
         Backend.GameData.Insert("UserInfo", param);                                  // 새로운값 Insert
 
     }
+    #endregion
+
+    #region Google Platform
+    /// <summary>
+    /// 구글 플랫폼 초기 설정
+    /// </summary>
+    public void GooglePlatformSet()
+    {
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration
+        .Builder()
+        .RequestServerAuthCode(false)
+        .RequestEmail()
+        .RequestIdToken()
+        .Build();
+
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.DebugLogEnabled = false;
+
+        PlayGamesPlatform.Activate();
+    }
+
+    public void GoogleLogin()
+    {
+        // 이미 가입이 된 상태 라면
+        if (Social.localUser.authenticated == true)
+        {
+            BackendReturnObject BRO = Backend.BMember.AuthorizeFederation(GoogleGetTokens(), FederationType.Google);
+
+            // 씬 이동
+            SceneConsole.Instance.LoadScene(SceneName.LobbyScene);
+        }
+        // 첫 가입 일시
+        else
+        {
+            Social.localUser.Authenticate((bool success) =>
+            {
+                // success 가 true 라면 회원 가입
+                if (!success)
+                    SetCallLogMessage(IMessage.G_Login_Fail);
+            });
+        }
+
+    }
+
+    public void GoogleLogOut()
+    {
+        if (Social.localUser.authenticated == true)     // 구글 로그아웃
+        {
+            ((PlayGamesPlatform)Social.Active).SignOut();
+            //GameManager.Sound.Play(UI_P.UITap);
+            SceneConsole.Instance.LoadScene(SceneName.LoginScene);
+        }
+        else                                            // 커스텀 로그아웃
+        {
+            Backend.BMember.Logout();       // 커스텀 아이디는 별도로 토큰을 받지않습니다 (토큰 항상 NULL)
+            //GameManager.Sound.Play(UI_P.UITap);
+            SceneConsole.Instance.LoadScene(SceneName.LoginScene);
+        }
+
+    }
+
+    public string GoogleGetTokens()
+    {
+        if (PlayGamesPlatform.Instance.localUser.authenticated)
+        {
+            // 유저 토큰 받기 첫 번째 방법
+            string _IDtoken = PlayGamesPlatform.Instance.GetIdToken();
+            // 두 번째 방법
+            //string _IDtoken = ((PlayGamesLocalUser)Social.localUser).GetIdToken();
+            return _IDtoken;
+        }
+        else
+        {
+            //Debug.Log("Not Connected : fail");
+            return null;
+        }
+    }
+    #endregion
 }

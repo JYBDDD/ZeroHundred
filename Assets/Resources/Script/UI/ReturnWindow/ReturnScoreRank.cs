@@ -13,8 +13,8 @@ public class ReturnScoreRank : MonoBehaviour
     private void OnEnable()
     {
         score.text = $"{GameManager.SCORE}";                                // 현재 점수
-        myBestScore.text = $"{GameManager.BackendMain.BestMyScore()}";      // 최고 점수
-        GameManager.BackendMain.ONInsertUserInfo();
+        myBestScore.text = $"{GameManager.NetworkMain.BestMyScore()}";      // 최고 점수
+        GameManager.NetworkMain.ONInsertUserInfo();
     }
 
 

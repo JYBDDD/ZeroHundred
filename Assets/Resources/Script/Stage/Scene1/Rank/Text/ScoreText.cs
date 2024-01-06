@@ -12,6 +12,6 @@ public class ScoreText : MonoBehaviour
     }
     private void OnEnable()
     {
-        text.text = $"{GameManager.BackendMain.BestMyScore()}";
+        text.text = $"{GameManager.NetworkMain.BestMyScore()}";
     }
 }

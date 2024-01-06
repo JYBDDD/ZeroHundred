@@ -41,11 +41,11 @@ public class RankToolSet : MonoBehaviour
 
             // 닉네임
             Text name = clone.transform.GetChild(3).transform.GetChild(0).GetComponent<Text>();
-            name.text = $"{GameManager.BackendMain.GetRankListNickLookUp(i)}";
+            name.text = $"{GameManager.NetworkMain.GetRankListNickLookUp(i)}";
 
             // 점수
             Text score = clone.transform.GetChild(2).GetComponent<Text>();
-            score.text = $"{GameManager.BackendMain.GetRankListScoreLookUp(i)}";
+            score.text = $"{GameManager.NetworkMain.GetRankListScoreLookUp(i)}";
         }
     }
 

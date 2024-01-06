@@ -12,6 +12,6 @@ public class RankText : MonoBehaviour
     }
     private void OnEnable()
     {
-        text.text = $"{GameManager.BackendMain.BestMyRank()}";
+        text.text = $"{GameManager.NetworkMain.BestMyRank()}";
     }
 }

@@ -11,12 +11,12 @@ public class NickNameGet : MonoBehaviour
     {
         text = GetComponent<Text>();
 
-        GameManager.BackendMain.GetMyNewData();
+        GameManager.NetworkMain.GetMyNewData();
     }
 
     private void OnEnable()
     {
-        text.text = $"{"<color=#FFE400>" + "Nick" + "</color>" + "<color=#ffffff>" + " :  " + "</color>"}{ GameManager.BackendMain.GetNick()}";
+        text.text = $"{"<color=#FFE400>" + "Nick" + "</color>" + "<color=#ffffff>" + " :  " + "</color>"}{ GameManager.NetworkMain.GetNick()}";
     }
 
 }
