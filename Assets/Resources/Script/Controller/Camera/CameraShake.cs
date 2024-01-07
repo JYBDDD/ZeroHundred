@@ -23,8 +23,6 @@ public class CameraShake : MonoBehaviour
         cameraPos = mainCamera.transform.position;
         originRange = shakeRange;
         originDuration = duration;
-
-        GameManager.Sound.Play(SceneSound_P.GameSceneBGM, Define.Sound.bgm);
     }
 
     public void HitPlayer_Shake()

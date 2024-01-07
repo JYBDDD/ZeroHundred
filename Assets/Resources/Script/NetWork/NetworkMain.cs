@@ -71,6 +71,12 @@ public class NetworkMain : MonoNetwork
 
     public string GetNick()
     {
+        if(Backend.BMember == null)
+        {
+            Debug.LogWarning("잘못된 씬에서 실행되서 로드하지 않습니다");
+            return "관. 리. 자.";
+        }
+
         BackendReturnObject bro = Backend.BMember.GetUserInfo();
         return bro.GetReturnValuetoJSON()["row"]["nickname"].ToString();
 
@@ -165,6 +171,12 @@ public class NetworkMain : MonoNetwork
 
     public void GetMyNewData()      // 내 랭킹, 점수 데이터가 없을시 실행         (NickNameGet 에서 실행중 Awake)
     {
+        if(Backend.URank == null)
+        {
+            Debug.LogWarning("잘못된 씬에서 실행되서 로드하지 않습니다");
+            return;
+        }
+
         BackendReturnObject bro = Backend.URank.User.GetMyRank(rankuuid);
 
         if (bro.IsSuccess())

@@ -21,7 +21,6 @@ public class PlayerMoving : MonoBehaviour
         rightPos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 4.66f);
         upPos = new Vector3(transform.position.x + 5f, transform.position.y, transform.position.z);
         downPos = new Vector3(transform.position.x - 14f, transform.position.y, transform.position.z);
-        GameManager.Sound.Play(SceneSound_P.StartSceneBGM, Define.Sound.bgm);
 
         this.UpdateAsObservable().Subscribe(_ => PlayerPosMove());
     }

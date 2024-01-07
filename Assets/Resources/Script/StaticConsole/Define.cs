@@ -66,7 +66,7 @@ namespace SceneN
     public struct SceneName
     {
         public const string LoginScene = "LoginScene";
-        public const string LobbyScene = "Scene 1";
+        public const string LobbyScene = "LobbyScene";
         public const string GameScene = "GameScene";
     }
 

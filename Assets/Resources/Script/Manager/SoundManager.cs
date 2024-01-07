@@ -1,6 +1,9 @@
+using Path;
+using SceneN;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / CaneraShake / 
 {
@@ -23,6 +26,33 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
         }
 
         audioSources[(int)Define.Sound.bgm].loop = true;        // BGM 반복 재생
+
+        // 초기 씬에 따른 BGM Play
+        SceneBGMPlay();
+    }
+
+    public void SceneBGMPlay(string scene = "")
+    {
+        if(scene == "")
+            scene = SceneManager.GetActiveScene().name;
+
+        switch (scene)
+        {
+            case "AdvertisingScene":
+                Play(SceneSound_P.LoadingSceneBGM, Define.Sound.bgm);
+                break;
+            case SceneName.LoginScene:
+                Play(SceneSound_P.LoadingSceneBGM, Define.Sound.bgm);
+                break;
+            case SceneName.LobbyScene:
+                Play(SceneSound_P.StartSceneBGM, Define.Sound.bgm);
+                break;
+            case SceneName.GameScene:
+                Play(SceneSound_P.GameSceneBGM, Define.Sound.bgm);
+                break;
+            default:
+                break;
+        }
     }
 
     public void Clear()         // 씬 변경시 사용
@@ -45,6 +75,10 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
         if(type == Define.Sound.bgm)
         {
             AudioSource audioSource = audioSources[(int)Define.Sound.bgm];
+
+            // 동일 BGM일경우 그대로 실행
+            if (audioClip == audioSource.clip)
+                return;
 
             if (audioSource.isPlaying)                              // 재생중인 BGM이 있을시 종료
                 audioSource.Stop();

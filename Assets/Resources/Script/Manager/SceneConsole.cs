@@ -1,9 +1,6 @@
 using SceneN;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine.UI;
@@ -70,10 +67,10 @@ public class SceneConsole : MonoSingleton<SceneConsole>
         op.allowSceneActivation = false;
 
         await UniTask.WaitUntil(() => op.isDone == false);
+        GameManager.Sound.SceneBGMPlay(sceneName);
         await UniTask.DelayFrame(5, PlayerLoopTiming.Update, tokenS.Token);
 
         op.allowSceneActivation = true;
-
 
         // Fade Out
         while (_group.alpha > 0)
