@@ -3,13 +3,12 @@ using SceneN;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / CaneraShake / 
 {
-    public static float BGMSliderPitch = 0.5f;
-    public static float EffSliderPitch = 0.5f;
-
     AudioSource[] audioSources = new AudioSource[(int)Define.Sound.maxCount];           // BGM  or  Effect  (소리발생 근원지) -> MainCamera
     Dictionary<string, AudioClip> _audioClip = new Dictionary<string, AudioClip>();     // 재생할 클립
 
@@ -27,6 +26,7 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
 
         audioSources[(int)Define.Sound.bgm].loop = true;        // BGM 반복 재생
 
+        InitVolume();
         // 초기 씬에 따른 BGM Play
         SceneBGMPlay();
     }
@@ -84,14 +84,14 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
                 audioSource.Stop();
 
             audioSource.clip = audioClip;
-            audioSource.volume = BGMSliderPitch;
+            audioSource.volume = _volume_BGM;
             audioSource.Play();
         }
 
         if(type == Define.Sound.effect)
         {
             AudioSource audioSource = audioSources[(int)Define.Sound.effect];
-            audioSource.volume = EffSliderPitch;
+            audioSource.volume = _volume_SFX;
             audioSource.PlayOneShot(audioClip);                     // Effect 사운드 1번만 실행
         }
     }
@@ -101,9 +101,9 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
         AudioClip audioClip = DefinePathAudioClip(path, type);
 
         if(type == Define.Sound.effect)
-            Play(audioClip, type, EffSliderPitch);
+            Play(audioClip, type, _volume_SFX);
         if(type == Define.Sound.bgm)
-            Play(audioClip, type, BGMSliderPitch);
+            Play(audioClip, type, _volume_BGM);
 
     }
 
@@ -131,4 +131,64 @@ public class SoundManager : IManager        // 첫 BGM호출 -> PlayerMoving / Cane
     {
         
     }
+
+    #region Volume Mixer
+    AudioMixer mixer;
+
+    float _volume_BGM;
+    float _volume_SFX;
+    float _volume_Mute;
+
+    /// <summary>
+    /// 볼룜 저장 초기값 설정
+    /// </summary>
+    public void InitVolume()
+    {
+        if (mixer == null)
+            mixer = Resources.Load<AudioMixer>("Art/Sound/Mixer");
+
+        var vol = PlayerPrefs.GetFloat("_volume_Master",0);
+        _volume_Mute = vol <= 0 ? 0 : 1;
+        SetMute(_volume_Mute);
+
+        vol = PlayerPrefs.GetFloat("_volume_BGM",0.5f);
+        SetBGMVal(vol);
+
+        vol = PlayerPrefs.GetFloat("_volume_SFX",0.5f);
+        SetSFXVal(vol);
+    }
+
+    public void SetMute(float check)
+    {
+        float vol = check <= 0 ? 0 : 1;
+        mixer.SetFloat("Master", check);
+        _volume_Mute = vol;
+        PlayerPrefs.SetFloat("_volume_Master", vol);
+    }
+    public void SetSFXVal(float sliderVal)
+    {
+        mixer.SetFloat("SFX", sliderVal);
+        _volume_SFX = sliderVal;
+        PlayerPrefs.SetFloat("_volume_SFX", sliderVal);
+    }
+    public void SetBGMVal(float sliderVal)
+    {
+        mixer.SetFloat("BGM", sliderVal);
+        _volume_BGM = sliderVal;
+        PlayerPrefs.SetFloat("_volume_BGM", sliderVal);
+    }
+
+    public bool GetMuteF()
+    {
+        return (_volume_Mute <= 0) ? false : true;
+    }
+    public float GetBGMF()
+    {
+        return _volume_BGM;
+    }
+    public float GetSFXF()
+    {
+        return _volume_SFX;
+    }
+    #endregion
 }
